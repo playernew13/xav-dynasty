@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Xav|Dynasty — Shop & Payment</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+        body{background:linear-gradient(135deg,#0f0f23,#1a1a3c,#2d1b69);min-height:100vh;padding:30px 20px;color:white;}
+        .container{max-width:460px;margin:0 auto;}
+        .tabs{display:flex;background:rgba(255,255,255,.08);border-radius:16px;padding:5px;margin-bottom:25px;border:1px solid rgba(255,255,255,.1);}
+        .tab-btn{flex:1;padding:12px 5px;border-radius:12px;border:none;background:transparent;color:#aaa;font-size:13px;font-weight:600;cursor:pointer;transition:.3s;}
+        .tab-btn.active{background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;box-shadow:0 4px 12px rgba(0,200,255,.3);}
+        .header{text-align:center;margin-bottom:25px;}
+        .header h1{font-size:28px;background:linear-gradient(90deg,#00d4ff,#7928ca,#ff0080);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
+        .header p{color:#ccc;font-size:15px;}
+        .brand-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(121,40,202,.2);padding:8px 18px;border-radius:30px;margin-top:12px;font-size:14px;color:#d8b4fe;border:1px solid rgba(121,40,202,.3);}
+        .card{background:rgba(255,255,255,.08);backdrop-filter:blur(24px);border-radius:24px;padding:25px 20px;border:1px solid rgba(255,255,255,.15);margin-bottom:25px;}
+        .page{display:none;}
+        .page.active{display:block;}
+        .section-title{font-size:18px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+        .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-bottom:25px;}
+        .product-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:15px;text-align:center;transition:.3s;}
+        .product-card:hover{border-color:rgba(0,212,255,.4);transform:translateY(-4px);}
+        .product-icon{font-size:36px;margin-bottom:10px;}
+        .product-name{font-size:14px;font-weight:600;margin-bottom:6px;}
+        .product-price{font-size:16px;font-weight:700;color:#00d4ff;margin-bottom:10px;}
+        .btn-row{display:flex;gap:8px;margin-top:8px;}
+        .detail-btn{flex:1;background:rgba(255,255,255,.1);color:#ddd;border:none;padding:8px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;}
+        .detail-btn:hover{background:rgba(255,255,255,.2);}
+        .buy-btn{flex:1;background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;border:none;padding:8px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;}
+        .buy-btn:hover{transform:scale(1.03);}
+        
+        /* === TESTIMONI === */
+        .testimoni-title{font-size:18px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+        .testimoni-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+        .testimoni-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;transition:.3s;}
+        .testimoni-card:hover{border-color:rgba(0,212,255,.3);transform:translateY(-2px);}
+        .testimoni-img{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:10px;cursor:pointer;transition:.3s;}
+        .testimoni-img:hover{opacity:.85;transform:scale(1.02);}
+        .testimoni-name{font-size:13px;font-weight:600;margin-bottom:4px;}
+        .testimoni-text{font-size:12px;color:#aaa;line-height:1.5;}
+        .testimoni-bintang{color:#ffcc00;margin-bottom:6px;}
+
+        /* === KOTAK BESAR GAMBAR (UNTUK TESTI + DETAIL PRODUK) === */
+        .img-full-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;}
+        .img-full-overlay.show{display:flex;}
+        .img-full-box{position:relative;max-width:90vw;max-height:90vh;}
+        .img-full{width:auto;max-width:100%;max-height:85vh;border-radius:12px;box-shadow:0 0 40px rgba(0,212,255,.2);cursor:default;}
+        .img-full-close{position:absolute;top:-45px;right:0;background:rgba(255,255,255,.15);color:white;border:none;padding:10px 18px;border-radius:10px;font-size:15px;cursor:pointer;backdrop-filter:blur(10px);}
+        .img-full-close:hover{background:rgba(255,255,255,.25);}
+        .img-full-keterangan{text-align:center;margin-top:15px;color:#ddd;font-size:14px;}
+
+        /* === KOTAK DETAIL PRODUK === */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;}
+        .modal-overlay.show{display:flex;}
+        .modal-box{background:#1a1a3c;border-radius:20px;padding:22px;max-width:400px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,.15);box-shadow:0 10px 40px rgba(0,0,0,.5);}
+        .modal-img{width:100%;height:180px;object-fit:cover;border-radius:14px;margin-bottom:15px;background:rgba(255,255,255,.05);cursor:pointer;transition:.3s;}
+        .modal-img:hover{opacity:.9;transform:scale(1.01);}
+        .modal-title{font-size:18px;font-weight:700;margin-bottom:5px;}
+        .modal-price{font-size:20px;font-weight:700;color:#00d4ff;margin-bottom:15px;}
+        .modal-desc{font-size:14px;line-height:1.8;color:#ccc;margin-bottom:20px;}
+        .modal-close{width:100%;background:rgba(255,255,255,.1);color:#fff;border:none;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;}
+        .modal-close:hover{background:rgba(255,255,255,.2);}
+
+        .dev-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#7928ca,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:45px;margin:0 auto 20px;box-shadow:0 0 25px rgba(121,40,202,.4);}
+        .dev-name{text-align:center;font-size:22px;font-weight:700;margin-bottom:5px;background:linear-gradient(90deg,#00d4ff,#7928ca);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .dev-role{text-align:center;color:#aaa;font-size:14px;margin-bottom:25px;}
+        .contact-box{display:flex;align-items:center;gap:15px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:15px;margin-bottom:12px;text-decoration:none;color:white;transition:.3s;}
+        .contact-box:hover{border-color:rgba(0,212,255,.4);transform:translateY(-3px);}
+        .contact-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+        .contact-wa{background:linear-gradient(135deg,#25d366,#128c7e);}
+        .contact-tg{background:linear-gradient(135deg,#0088cc,#00c6ff);}
+        .contact-tt{background:linear-gradient(135deg,#000,#25F4EE,#FE2C55);}
+        .contact-info{flex:1;}
+        .contact-label{font-size:13px;color:#aaa;margin-bottom:3px;}
+        .contact-value{font-size:15px;font-weight:600;}
+        .top-video-box{margin-bottom:25px;text-align:center;}
+        .top-video{width:100%;max-width:380px;height:220px;border-radius:16px;object-fit:cover;box-shadow:0 4px 20px rgba(0,200,255,.25);border:2px solid rgba(0,212,255,.35);}
+        .qris-section{text-align:center;margin-bottom:25px;}
+        .qris-label{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,#0066ff,#00ccff);padding:8px 20px;border-radius:30px;font-weight:bold;font-size:15px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,102,255,.3);}
+        .qris-box{background:#fff;border-radius:16px;padding:15px;display:inline-block;box-shadow:0 4px 20px rgba(0,200,255,.25);border:2px solid #e0e0e0;margin-bottom:12px;}
+        .qris-img{width:220px;height:220px;border-radius:8px;object-fit:contain;display:block;}
+        .download-qris-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;text-decoration:none;padding:10px 20px;border-radius:12px;font-size:14px;font-weight:600;margin-top:15px;transition:.3s;}
+        .download-qris-btn:hover{transform:translateY(-2px);}
+        .scan-text{font-size:13px;color:#aaa;margin-top:12px;}
+        .divider{display:flex;align-items:center;gap:15px;margin:25px 0;}
+        .divider hr{flex:1;border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);}
+        .divider span{color:#777;font-size:13px;}
+        .method-title{font-size:16px;font-weight:600;margin-bottom:15px;color:#ddd;}
+        .method-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:18px;margin-bottom:12px;transition:.3s;}
+        .method-box:hover{border-color:rgba(0,200,255,.4);transform:translateY(-2px);}
+        .method-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+        .method-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#0099ff,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:22px;}
+        .method-name{font-weight:600;font-size:16px;}
+        .method-badge{margin-left:auto;background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;font-size:11px;padding:3px 8px;border-radius:10px;font-weight:bold;}
+        .method-number{font-size:18px;font-weight:700;letter-spacing:1px;margin-bottom:4px;}
+        .method-holder{font-size:13px;color:#999;margin-bottom:12px;}
+        .copy-btn{background:rgba(0,212,255,.1);color:#00d4ff;border:1px solid rgba(0,212,255,.3);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;}
+        .copy-btn:hover{background:#00d4ff;color:#000;}
+        .copy-btn.copied{background:#00ff88;color:#000;border-color:#00ff88;}
+        .note-box{background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.2);border-radius:12px;padding:15px;margin-top:20px;}
+        .note-box h4{color:#ffcc00;font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+        .note-box p{font-size:13px;color:#bbb;line-height:1.6;}
+        .footer{text-align:center;margin-top:30px;font-size:12px;color:#555;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🛒 Xav|Dynasty</h1>
+        <p>Official Store — Kualitas Terbaik & Terpercaya</p>
+        <div class="brand-badge"> By XaveLuxy</div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="bukaTab('shop')">🛍️ Toko</button>
+        <button class="tab-btn" onclick="bukaTab('payment')">💳 Bayar</button>
+        <button class="tab-btn" onclick="bukaTab('dev')">👤 Dev</button>
+    </div>
+
+    <!-- TOKO -->
+    <div class="page active" id="page-shop">
+        <div class="card">
+            <h2 class="section-title">🛍️ 𝐏𝐑𝐎𝐃𝐔𝐊 𝐓𝐄𝐑𝐒𝐄𝐃𝐈𝐀</h2>
+            <div class="product-grid">
+                <!-- PRODUK 1 -->
+                <div class="product-card">
+                    <div class="product-icon">👾</div>
+                    <div class="product-name">Sc Bot WhatsApp</div>
+                    <div class="product-price">Rp 25.000</div>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(1)">📋 Detail</button>
+                        <button class="buy-btn" onclick="bukaTab('payment')">Beli</button>
+                    </div>
+                </div>
+                <!-- PRODUK 2 -->
+                <div class="product-card">
+                    <div class="product-icon">⚡</div>
+                    <div class="product-name">Panel pterodactyl</div>
+                    <div class="product-price">Rp 10.000</div>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(2)">📋 Detail</button>
+                        <button class="buy-btn" onclick="bukaTab('payment')">Beli</button>
+                    </div>
+                </div>
+                <!-- PRODUK 3 -->
+                <div class="product-card">
+                    <div class="product-icon">📞</div>
+                    <div class="product-name">Nokos</div>
+                    <div class="product-price">Rp 10.000</div>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(3)">📋 Detail</button>
+                        <button class="buy-btn" onclick="bukaTab('payment')">Beli</button>
+                    </div>
+                </div>
+                <!-- PRODUK 4 -->
+                <div class="product-card">
+                    <div class="product-icon">☠️</div>
+                    <div class="product-name">APK Bug</div>
+                    <div class="product-price">Rp 10.000</div>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(4)">📋 Detail</button>
+                        <button class="buy-btn" onclick="bukaTab('payment')">Beli</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TESTIMONI PEMBELI -->
+        <div class="card">
+            <h2 class="testimoni-title">💬 Testimoni Pembeli — Klik Gambar untuk Lihat</h2>
+            <div class="testimoni-grid">
+                <!-- TESTI 1 -->
+                <div class="testimoni-card">
+                    <img src="https://i.ibb.co/9ZqXpLb/testi1.jpg" class="testimoni-img" alt="Testimoni 1" loading="lazy" onclick="lihatGambar(this.src,'Andi — Manado')">
+                    <div class="testimoni-bintang">⭐⭐⭐⭐⭐</div>
+                    <div class="testimoni-name">Andi — Manado</div>
+                    <div class="testimoni-text">"Cepat prosesnya, barang bagus, amanah bang 👍"</div>
+                </div>
+                <!-- TESTI 2 -->
+                <div class="testimoni-card">
+                    <img src="https://i.ibb.co/8ZqXpLb/testi2.jpg" class="testimoni-img" alt="Testimoni 2" loading="lazy" onclick="lihatGambar(this.src,'Rian — Bitung')">
+                    <div class="testimoni-bintang">⭐⭐⭐⭐⭐</div>
+                    <div class="testimoni-name">Rian — Bitung</div>
+                    <div class="testimoni-text">"Sesuai janji, langsung dikirim, rekomendasi 🔥"</div>
+                </div>
+                <!-- TESTI 3 -->
+                <div class="testimoni-card">
+                    <img src="https://i.ibb.co/6RK2zZY/testi3.jpg" class="testimoni-img" alt="Testimoni 3" loading="lazy" onclick="lihatGambar(this.src,'Dimas — Tomohon')">
+                    <div class="testimoni-bintang">⭐⭐⭐⭐⭐</div>
+                    <div class="testimoni-name">Dimas — Tomohon</div>
+                    <div class="testimoni-text">"Respon cepat, dibantu sampai bisa, makasih bang 🙏"</div>
+                </div>
+                <!-- TESTI 4 -->
+                <div class="testimoni-card">
+                    <img src="https://i.ibb.co/TDJwR3Y/testi4.jpg" class="testimoni-img" alt="Testimoni 4" loading="lazy" onclick="lihatGambar(this.src,'Budi — Kotamobagu')">
+                    <div class="testimoni-bintang">⭐⭐⭐⭐⭐</div>
+                    <div class="testimoni-name">Budi — Kotamobagu</div>
+                    <div class="testimoni-text">"Sudah beli berkali-kali, selalu aman & terpercaya ✅"</div>
+                </div>
+            </div>
+            <p style="text-align:center;margin-top:15px;font-size:13px;color:#888;">📸 Klik gambar di atas untuk lihat bukti asli pembelian!</p>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">ℹ️ Info Toko</h2>
+            <p style="font-size:14px;color:#ccc;line-height:1.8;">
+                ✅ Open 24 Jam<br>
+                ✅ Proses Cepat & Aman<br>
+                ✅ Garansi Uang Kembali<br>
+                ✅ Resmi By Xav|Dynasty
+            </p>
+        </div>
+    </div>
+
+    <!-- PEMBAYARAN -->
+    <div class="page" id="page-payment">
+        <div class="card">
+            <h2 class="section-title" style="justify-content:center;font-size:22px;">💳 Pembayaran</h2>
+            <p style="text-align:center;color:#aaa;margin-bottom:20px;">Silakan bayar melalui metode di bawah</p>
+
+            <div class="top-video-box">
+                <video class="top-video" loop playsinline controls>
+                    <source src="https://cdn.videy.co/ZLxBOhDP1.mp4" type="video/mp4">
+                    Browser tidak mendukung video.
+                </video>
+            </div>
+
+            <div class="qris-section">
+                <div class="qris-label">📱 QRIS — Semua Pembayaran</div>
+                <div class="qris-box">
+                    <img src="https://i.ibb.co/g1mZnq5/img-1788362928574.jpg" class="qris-img" alt="QRIS">
+                </div>
+                <a href="https://i.ibb.co/g1mZnq5/img-1788362928574.jpg" download="QRIS-Xav-Dynasty.jpg" class="download-qris-btn">
+                    ⬇️ Download QRIS
+                </a>
+                <p class="scan-text">Scan kode QR atau download untuk dipindai</p>
+            </div>
+
+            <div class="divider"><hr><span>Atau</span><hr></div>
+
+            <h3 class="method-title">💳 Pembayaran Manual</h3>
+            <div class="method-box">
+                <div class="method-header">
+                    <div class="method-icon">🩵</div>
+                    <div class="method-name">DANA</div>
+                    <span class="method-badge">Cepat</span>
+                </div>
+                <div class="method-number">0856xxxxxxxx</div>
+                <button class="copy-btn" onclick="salinNomor(this,'085695968343')">📋 Salin Nomor</button>
+            </div>
+
+            <div class="note-box">
+                <h4>⚠️ Catatan Penting</h4>
+                <p>• Setelah bayar, simpan bukti tf<br>
+                • Kirim bukti ke Dev untuk mengkonfirmasi pesanan<br>
+                • Barang dikirim setelah pembayaran terverifikasi ✅</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DEV / KONTAK -->
+    <div class="page" id="page-dev">
+        <div class="card">
+            <div class="dev-avatar">👨‍💻</div>
+            <h2 class="dev-name">Xav|Dynasty</h2>
+            <p class="dev-role">Developer & Penjual</p>
+
+            <a href="https://wa.me/628xxxxxxxxx" target="_blank" class="contact-box">
+                <div class="contact-icon contact-wa">💬</div>
+                <div class="contact-info">
+                    <div class="contact-label">WhatsApp</div>
+                    <div class="contact-value">@nama_wa</div>
+                </div>
+            </a>
+            <a href="https://t.me/xxxxxx" target="_blank" class="contact-box">
+                <div class="contact-icon contact-tg">✈️</div>
+                <div class="contact-info">
+                    <div class="contact-label">Telegram</div>
+                    <div class="contact-value">@nama_tg</div>
+                </div>
+            </a>
+            <a href="https://tiktok.com/@xxxxxx" target="_blank" class="contact-box">
+                <div class="contact-icon contact-tt">🎵</div>
+                <div class="contact-info">
+                    <div class="contact-label">TikTok</div>
+                    <div class="contact-value">@nama_tiktok</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">© 2026 Xav|Dynasty — Semua Hak Dilindungi</div>
+</div>
+
+<!-- KOTAK BESAR GAMBAR (DIPAKAI TESTI + DETAIL PRODUK) -->
+<div class="img-full-overlay" id="imgFullOverlay" onclick="tutupGambar();">
+    <div class="img-full-box" onclick="event.stopPropagation();">
+        <button class="img-full-close" onclick="tutupGambar();">✕ Tutup</button>
+        <img src="" class="img-full" id="imgFullDisplay" alt="Gambar">
+        <p class="img-full-keterangan" id="imgFullKeterangan"></p>
+    </div>
+</div>
+
+<!-- KOTAK DETAIL PRODUK -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this) tutupDetail();">
+    <div class="modal-box" id="detailContent"></div>
+</div>
+
+<script>
+// === FUNGSI KLIK GAMBAR — BESARKAN ===
+function lihatGambar(src, keterangan){
+    document.getElementById('imgFullDisplay').src = src;
+    document.getElementById('imgFullKeterangan').textContent = keterangan;
+    document.getElementById('imgFullOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+function tutupGambar(){
+    document.getElementById('imgFullOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+// === DATA PRODUK ===
+const produk = [
+    {
+        nama: "Sc Bot WhatsApp",
+        harga: "Rp 25.000",
+        gambar: "https://i.ibb.co/vCzprzs9/img-1790049444503.jpg",
+        keteranganGambar: "Tampilan menu Sc Bot WhatsApp",
+        deskripsi: `✅ No bad sessions\n✅ Type caseXplugins (ESM)\n✅ Total fitur aktif 250+\n✅ Full pengajaran memasang script\n✅ No Enc 100%\n✅ Stabil\n✅ Support button\n✅ Baileys: npm:wileys`
+    },
+    {
+        nama: "Panel Pterodactyl",
+        harga: "Rp 10.000",
+        gambar: "https://i.ibb.co/Rw7xndv/img-1790054082567.jpg",
+        keteranganGambar: "tampilan Panel Pterodactyl",
+        deskripsi: `✅ tutor cara pakai\n✅ Bisa buat server bot dll\n✅ Stabil & cepat\n✅ no eror\n✅ no delay`
+    },
+    {
+        nama: "Nokos All Negara",
+        harga: "Rp 10.000",
+        gambar: "https://i.ibb.co/FL9mQzxv/img-1790054909150.jpg",
+        keteranganGambar: "Nokos — Semua Negara Tersedia",
+        deskripsi: `✅ Banyak negara tersedia\n✅ Siap pakai langsung\n✅ no kenon\n✅ support semua WA`
+    },
+    {
+        nama: "APK Bug",
+        harga: "Rp 10.000",
+        gambar: "https://i.ibb.co/JwWvDkC9/img-1790055211479.jpg",
+        keteranganGambar: "APK Bug — Versi Terbaru",
+        deskripsi: `✅ support semua hp\n✅ Fitur lengkap\n✅ cocok bug ripper\n✅ Stabil di semua HP\n✅ Bantuan penuh`
+    }
+];
+
+// === BUKA DETAIL PRODUK ===
+function bukaDetail(no){
+    const p = produk[no-1];
+    const konten = document.getElementById('detailContent');
+    konten.innerHTML = `
+        <img src="${p.gambar}" class="modal-img" alt="${p.nama}" loading="lazy" onclick="lihatGambar('${p.gambar}','${p.keteranganGambar}')">
+        <h3 class="modal-title">${p.nama}</h3>
+        <p class="modal-price">${p.harga}</p>
+        <div class="modal-desc">${p.deskripsi.replace(/\n/g,'<br>')}</div>
+        <button class="buy-btn" style="margin-bottom:10px;" onclick="bukaTab('payment');tutupDetail();">💳 Beli Sekarang</button>
+        <button class="modal-close" onclick="tutupDetail()">Tutup</button>
+    `;
+    document.getElementById('detailModal').classList.add('show');
+}
+
+function tutupDetail(){
+    document.getElementById('detailModal').classList.remove('show');
+}
+
+function bukaTab(namaTab){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    event.target.closest('.tab-btn')?.classList.add('active');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+namaTab).classList.add('active');
+}
+
+function salinNomor(btn,nomor){
+    navigator.clipboard.writeText(nomor).then(()=>{
+        btn.textContent='✅ Tersalin!';btn.classList.add('copied');
+        setTimeout(()=>{btn.textContent='📋 Salin Nomor';btn.classList.remove('copied');},2000);
+    });
+}
+</script>
+</body>
+</html>
