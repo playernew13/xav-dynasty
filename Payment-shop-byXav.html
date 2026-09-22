@@ -5,620 +5,206 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🛒 Xav|Dynasty — Shop & Payment</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f0f23, #1a1a3c, #2d1b69);
-            min-height: 100vh;
-            padding: 30px 20px;
-            color: white;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 460px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* === NAVIGASI TAB — SEKARANG 3 TAB! === */
-        .tabs {
-            display: flex;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 5px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px 8px;
-            border-radius: 12px;
-            border: none;
-            background: transparent;
-            color: #aaa;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(90deg, #00d4ff, #7928ca);
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 200, 255, 0.3);
-        }
-
-        /* === HEADER === */
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            background: linear-gradient(90deg, #00d4ff, #7928ca, #ff0080);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
-        }
-
-        .header p {
-            color: #ccc;
-            font-size: 15px;
-        }
-
-        .brand-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(121, 40, 202, 0.2);
-            padding: 8px 18px;
-            border-radius: 30px;
-            margin-top: 12px;
-            font-size: 14px;
-            color: #d8b4fe;
-            border: 1px solid rgba(121, 40, 202, 0.3);
-        }
-
-        /* === KARD UMUM === */
-        .card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(24px);
-            border-radius: 24px;
-            padding: 25px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 40px rgba(121, 40, 202, 0.15);
-            margin-bottom: 25px;
-        }
-
-        /* === HALAMAN UMUM === */
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* === PRODUK === */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .product-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .product-card:hover {
-            border-color: rgba(0, 212, 255, 0.4);
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(121, 40, 202, 0.2);
-        }
-
-        .product-icon {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        .product-name {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .product-price {
-            font-size: 16px;
-            font-weight: 700;
-            color: #00d4ff;
-            margin-bottom: 10px;
-        }
-
-        .buy-btn {
-            width: 100%;
-            background: linear-gradient(90deg, #00d4ff, #7928ca);
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .buy-btn:hover {
-            transform: scale(1.03);
-        }
-
-        /* === VIP BOX === */
-        .vip-box {
-            background: linear-gradient(135deg, rgba(121, 40, 202, 0.2), rgba(0, 212, 255, 0.15));
-            border: 2px solid rgba(157, 78, 221, 0.4);
-            border-radius: 18px;
-            padding: 20px;
-            margin-top: 10px;
-        }
-
-        .vip-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #d8b4fe;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .vip-benefit {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 12px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .vip-benefit span {
-            font-size: 18px;
-        }
-
-        /* === 📱 HALAMAN DEV / KONTAK === */
-        .dev-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #7928ca, #00d4ff);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 45px;
-            margin: 0 auto 20px;
-            box-shadow: 0 0 25px rgba(121, 40, 202, 0.4);
-        }
-
-        .dev-name {
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 5px;
-            background: linear-gradient(90deg, #00d4ff, #7928ca);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .dev-role {
-            text-align: center;
-            color: #aaa;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
-        .contact-box {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 12px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .contact-box:hover {
-            border-color: rgba(0, 212, 255, 0.4);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0, 200, 255, 0.2);
-        }
-
-        .contact-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            flex-shrink: 0;
-        }
-
-        .contact-wa {
-            background: linear-gradient(135deg, #25d366, #128c7e);
-        }
-
-        .contact-tg {
-            background: linear-gradient(135deg, #0088cc, #00c6ff);
-        }
-
-        .contact-tt {
-            background: linear-gradient(135deg, #000000, #25F4EE, #FE2C55);
-        }
-
-        .contact-info {
-            flex: 1;
-        }
-
-        .contact-label {
-            font-size: 13px;
-            color: #aaa;
-            margin-bottom: 3px;
-        }
-
-        .contact-value {
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        /* === VIDEO === */
-        .top-video-box {
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .top-video {
-            width: 100%;
-            max-width: 380px;
-            height: 220px;
-            border-radius: 16px;
-            object-fit: cover;
-            box-shadow: 0 4px 20px rgba(0, 200, 255, 0.25);
-            border: 2px solid rgba(0, 212, 255, 0.35);
-        }
-
-        /* === QRIS === */
-        .qris-section {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .qris-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(90deg, #0066ff, #00ccff);
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
-        }
-
-        .qris-box {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 15px;
-            display: inline-block;
-            box-shadow: 0 4px 20px rgba(0, 200, 255, 0.25);
-            border: 2px solid #e0e0e0;
-            margin-bottom: 12px;
-        }
-
-        .qris-img {
-            width: 220px;
-            height: 220px;
-            border-radius: 8px;
-            object-fit: contain;
-            display: block;
-        }
-
-        .download-qris-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(90deg, #00d4ff, #7928ca);
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 200, 255, 0.3);
-        }
-
-        .download-qris-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(121, 40, 202, 0.4);
-        }
-
-        .scan-text {
-            font-size: 13px;
-            color: #aaa;
-            margin-top: 12px;
-        }
-
-        /* === PEMISAH === */
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin: 25px 0;
-        }
-
-        .divider hr {
-            flex: 1;
-            border: none;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        }
-
-        .divider span {
-            color: #777;
-            font-size: 13px;
-        }
-
-        /* === METODE PEMBAYARAN === */
-        .method-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #ddd;
-        }
-
-        .method-box {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .method-box:hover {
-            border-color: rgba(0, 200, 255, 0.4);
-            background: rgba(0, 200, 255, 0.05);
-            transform: translateY(-2px);
-        }
-
-        .method-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .method-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #0099ff, #00d4ff);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
-
-        .method-name {
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .method-badge {
-            margin-left: auto;
-            background: linear-gradient(90deg, #00d4ff, #7928ca);
-            color: white;
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        .method-number {
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-            color: #fff;
-        }
-
-        .method-holder {
-            font-size: 13px;
-            color: #999;
-            margin-bottom: 12px;
-        }
-
-        .copy-btn {
-            background: rgba(0, 212, 255, 0.1);
-            color: #00d4ff;
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .copy-btn:hover {
-            background: #00d4ff;
-            color: #000;
-        }
-
-        .copy-btn.copied {
-            background: #00ff88;
-            color: #000;
-            border-color: #00ff88;
-        }
-
-        /* === CATATAN === */
-        .note-box {
-            background: rgba(255, 170, 0, 0.08);
-border: 1px solid rgba(255, 170, 0, 0.2);
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 20px;
-        }
-
-        .note-box h4 {
-            color: #ffcc00;
-            font-size: 14px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .note-box p {
-            font-size: 13px;
-            color: #bbb;
-            line-height: 1.6;
-        }
-
-        /* === FOOTER === */
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #555;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+        body{background:linear-gradient(135deg,#0f0f23,#1a1a3c,#2d1b69);min-height:100vh;padding:30px 20px;color:white;}
+        .container{max-width:460px;margin:0 auto;}
+        .tabs{display:flex;background:rgba(255,255,255,.08);border-radius:16px;padding:5px;margin-bottom:25px;border:1px solid rgba(255,255,255,.1);}
+        .tab-btn{flex:1;padding:12px 5px;border-radius:12px;border:none;background:transparent;color:#aaa;font-size:13px;font-weight:600;cursor:pointer;transition:.3s;}
+        .tab-btn.active{background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;box-shadow:0 4px 12px rgba(0,200,255,.3);}
+        .header{text-align:center;margin-bottom:25px;}
+        .header h1{font-size:28px;background:linear-gradient(90deg,#00d4ff,#7928ca,#ff0080);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
+        .header p{color:#ccc;font-size:15px;}
+        .brand-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(121,40,202,.2);padding:8px 18px;border-radius:30px;margin-top:12px;font-size:14px;color:#d8b4fe;border:1px solid rgba(121,40,202,.3);}
+        .card{background:rgba(255,255,255,.08);backdrop-filter:blur(24px);border-radius:24px;padding:25px 20px;border:1px solid rgba(255,255,255,.15);margin-bottom:25px;}
+        .page{display:none;}
+        .page.active{display:block;}
+        .section-title{font-size:18px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+        .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-bottom:25px;}
+        .product-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:15px;text-align:center;transition:.3s;}
+        .product-card:hover{border-color:rgba(0,212,255,.4);transform:translateY(-4px);}
+        .product-icon{font-size:36px;margin-bottom:10px;}
+        .product-name{font-size:14px;font-weight:600;margin-bottom:6px;}
+        .product-price{font-size:16px;font-weight:700;color:#00d4ff;margin-bottom:10px;}
+        .btn-row{display:flex;gap:8px;margin-top:8px;}
+        .detail-btn{flex:1;background:rgba(255,255,255,.1);color:#ddd;border:none;padding:8px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;}
+        .detail-btn:hover{background:rgba(255,255,255,.2);}
+        .buy-btn{flex:1;background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;border:none;padding:8px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;}
+        .buy-btn:hover{transform:scale(1.03);}
+        
+        /* === TESTIMONI === */
+        .testimoni-title{font-size:18px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+        .testimoni-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+        .testimoni-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;transition:.3s;}
+        .testimoni-card:hover{border-color:rgba(0,212,255,.3);transform:translateY(-2px);}
+        .testimoni-img{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:10px;cursor:pointer;transition:.3s;}
+        .testimoni-img:hover{opacity:.85;transform:scale(1.02);}
+        .testimoni-name{font-size:13px;font-weight:600;margin-bottom:4px;}
+        .testimoni-text{font-size:12px;color:#aaa;line-height:1.5;}
+        .testimoni-bintang{color:#ffcc00;margin-bottom:6px;}
+
+        /* === KOTAK BESAR GAMBAR TESTIMONI === */
+        .img-full-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;}
+        .img-full-overlay.show{display:flex;}
+        .img-full-box{position:relative;max-width:90vw;max-height:90vh;}
+        .img-full{width:auto;max-width:100%;max-height:85vh;border-radius:12px;box-shadow:0 0 40px rgba(0,212,255,.2);}
+        .img-full-close{position:absolute;top:-45px;right:0;background:rgba(255,255,255,.15);color:white;border:none;padding:10px 18px;border-radius:10px;font-size:15px;cursor:pointer;backdrop-filter:blur(10px);}
+        .img-full-close:hover{background:rgba(255,255,255,.25);}
+        .img-full-keterangan{text-align:center;margin-top:15px;color:#ddd;font-size:14px;}
+
+        /* === KOTAK DETAIL PRODUK === */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;}
+        .modal-overlay.show{display:flex;}
+        .modal-box{background:#1a1a3c;border-radius:20px;padding:22px;max-width:400px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,.15);box-shadow:0 10px 40px rgba(0,0,0,.5);}
+        .modal-img{width:100%;height:180px;object-fit:cover;border-radius:14px;margin-bottom:15px;background:rgba(255,255,255,.05);}
+        .modal-title{font-size:18px;font-weight:700;margin-bottom:5px;}
+        .modal-price{font-size:20px;font-weight:700;color:#00d4ff;margin-bottom:15px;}
+        .modal-desc{font-size:14px;line-height:1.8;color:#ccc;margin-bottom:20px;}
+        .modal-close{width:100%;background:rgba(255,255,255,.1);color:#fff;border:none;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;}
+        .modal-close:hover{background:rgba(255,255,255,.2);}
+
+        .dev-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#7928ca,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:45px;margin:0 auto 20px;box-shadow:0 0 25px rgba(121,40,202,.4);}
+        .dev-name{text-align:center;font-size:22px;font-weight:700;margin-bottom:5px;background:linear-gradient(90deg,#00d4ff,#7928ca);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .dev-role{text-align:center;color:#aaa;font-size:14px;margin-bottom:25px;}
+        .contact-box{display:flex;align-items:center;gap:15px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:15px;margin-bottom:12px;text-decoration:none;color:white;transition:.3s;}
+        .contact-box:hover{border-color:rgba(0,212,255,.4);transform:translateY(-3px);}
+        .contact-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+        .contact-wa{background:linear-gradient(135deg,#25d366,#128c7e);}
+        .contact-tg{background:linear-gradient(135deg,#0088cc,#00c6ff);}
+        .contact-tt{background:linear-gradient(135deg,#000,#25F4EE,#FE2C55);}
+        .contact-info{flex:1;}
+        .contact-label{font-size:13px;color:#aaa;margin-bottom:3px;}
+        .contact-value{font-size:15px;font-weight:600;}
+        .top-video-box{margin-bottom:25px;text-align:center;}
+        .top-video{width:100%;max-width:380px;height:220px;border-radius:16px;object-fit:cover;box-shadow:0 4px 20px rgba(0,200,255,.25);border:2px solid rgba(0,212,255,.35);}
+        .qris-section{text-align:center;margin-bottom:25px;}
+        .qris-label{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,#0066ff,#00ccff);padding:8px 20px;border-radius:30px;font-weight:bold;font-size:15px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,102,255,.3);}
+        .qris-box{background:#fff;border-radius:16px;padding:15px;display:inline-block;box-shadow:0 4px 20px rgba(0,200,255,.25);border:2px solid #e0e0e0;margin-bottom:12px;}
+        .qris-img{width:220px;height:220px;border-radius:8px;object-fit:contain;display:block;}
+        .download-qris-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;text-decoration:none;padding:10px 20px;border-radius:12px;font-size:14px;font-weight:600;margin-top:15px;transition:.3s;}
+        .download-qris-btn:hover{transform:translateY(-2px);}
+        .scan-text{font-size:13px;color:#aaa;margin-top:12px;}
+        .divider{display:flex;align-items:center;gap:15px;margin:25px 0;}
+        .divider hr{flex:1;border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);}
+        .divider span{color:#777;font-size:13px;}
+        .method-title{font-size:16px;font-weight:600;margin-bottom:15px;color:#ddd;}
+        .method-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:18px;margin-bottom:12px;transition:.3s;}
+        .method-box:hover{border-color:rgba(0,200,255,.4);transform:translateY(-2px);}
+        .method-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+        .method-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#0099ff,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:22px;}
+        .method-name{font-weight:600;font-size:16px;}
+        .method-badge{margin-left:auto;background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;font-size:11px;padding:3px 8px;border-radius:10px;font-weight:bold;}
+        .method-number{font-size:18px;font-weight:700;letter-spacing:1px;margin-bottom:4px;}
+        .method-holder{font-size:13px;color:#999;margin-bottom:12px;}
+        .copy-btn{background:rgba(0,212,255,.1);color:#00d4ff;border:1px solid rgba(0,212,255,.3);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;}
+        .copy-btn:hover{background:#00d4ff;color:#000;}
+        .copy-btn.copied{background:#00ff88;color:#000;border-color:#00ff88;}
+        .note-box{background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.2);border-radius:12px;padding:15px;margin-top:20px;}
+        .note-box h4{color:#ffcc00;font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+        .note-box p{font-size:13px;color:#bbb;line-height:1.6;}
+        .footer{text-align:center;margin-top:30px;font-size:12px;color:#555;}
     </style>
 </head>
 <body>
-
 <div class="container">
-    <!-- HEADER BRAND -->
     <div class="header">
         <h1>🛒 Xav|Dynasty</h1>
         <p>Official Store — Kualitas Terbaik & Terpercaya</p>
         <div class="brand-badge">✨ By Xav|Dynasty</div>
     </div>
 
-    <!-- TAB NAVIGASI — 3 TAB SEKARANG! -->
     <div class="tabs">
         <button class="tab-btn active" onclick="bukaTab('shop')">🛍️ Toko</button>
         <button class="tab-btn" onclick="bukaTab('payment')">💳 Bayar</button>
         <button class="tab-btn" onclick="bukaTab('dev')">👤 Dev</button>
     </div>
 
-    <!-- ================================== -->
-    <!-- HALAMAN 1: TOKO / PRODUK + VIP -->
-    <!-- ================================== -->
+    <!-- TOKO -->
     <div class="page active" id="page-shop">
         <div class="card">
             <h2 class="section-title">🔥 Produk Kami</h2>
             <div class="product-grid">
                 <!-- PRODUK 1 -->
                 <div class="product-card">
-                    <div class="product-icon">🎮</div>
-                    <div class="product-name">Top Up Game</div>
+                    <div class="product-icon">📱</div>
+                    <div class="product-name">APK Bug Dasar</div>
                     <div class="product-price">Rp 5.000</div>
-                    <button class="buy-btn" onclick="bukaTab('payment')">Beli Sekarang</button>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(1)">📋 Detail</button>
+                        <button class="buy-btn" onclick="bukaTab('payment')">Beli</button>
+                    </div>
                 </div>
                 <!-- PRODUK 2 -->
                 <div class="product-card">
-                    <div class="product-icon">📱</div>
-                    <div class="product-name">E-Wallet</div>
+                    <div class="product-icon">📲</div>
+                    <div class="product-name">APK Bug Standar</div>
                     <div class="product-price">Rp 10.000</div>
-                    <button class="buy-btn" onclick="bukaTab('payment')">Beli Sekarang</button>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(2)">📋 Detail</button>
+                        <button class="buy-btn" onclick="bukaTab('payment')">Beli</button>
+                    </div>
                 </div>
                 <!-- PRODUK 3 -->
                 <div class="product-card">
-                    <div class="product-icon">🌐</div>
-                    <div class="product-name">Voucher</div>
+                    <div class="product-icon">⚡</div>
+                    <div class="product-name">APK Bug Lengkap</div>
                     <div class="product-price">Rp 15.000</div>
-                    <button class="buy-btn" onclick="bukaTab('payment')">Beli Sekarang</button>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(3)">📋 Detail</button>
+                        <button class="buy-btn" onclick="bukaTab('payment')">Beli</button>
+                    </div>
                 </div>
-                <!-- PRODUK 4 - VIP -->
-                <div class="product-card" style="border-color: rgba(157, 78, 221, 0.5); background: linear-gradient(135deg, rgba(121, 40, 202, 0.15), rgba(0, 212, 255, 0.1));">
-                    <div class="product-icon">👑</div>
-                    <div class="product-name">Layanan VIP</div>
-                    <div class="product-price">Rp 25.000</div>
-                    <button class="buy-btn" onclick="bukaTab('payment')">Beli Sekarang</button>
-                </div>
-            </div>
-
-            <!-- 📋 PENJELASAN KEUNTUNGAN VIP -->
-            <div class="vip-box">
-                <h3 class="vip-title">👑 Apa Itu Layanan VIP?</h3>
-                <p style="font-size:14px; color:#ccc; margin-bottom:15px; line-height:1.6;">
-                    <strong>Layanan VIP</strong> = Pelanggan Spesial! Dapat perlakuan istimewa & keuntungan lebih dari pembeli biasa.
-                </p>
-                <h4 style="color:#d8b4fe; margin-bottom:12px; font-size:15px;">✅ Keuntungan Member VIP:</h4>
-                <div class="vip-benefit">
-                    <span>⚡</span>
-                    <div><strong>Proses Didahulukan</strong> — Pesananmu diproses paling cepat duluan!</div>
-                </div>
-                <div class="vip-benefit">
-                    <span>🕒</span>
-                    <div><strong>Layanan 24 Jam</strong> — Kapan saja siap dilayani, tidak ada jam tutup!</div>
-                </div>
-                <div class="vip-benefit">
-                    <span>💰</span>
-                    <div><strong>Diskon Khusus</strong> — Harga lebih murah untuk pembelian berikutnya!</div>
-                </div>
-                <div class="vip-benefit">
-                    <span>🎁</span>
-                    <div><strong>Bonus Tambahan</strong> — Setiap pembelian selalu dapat bonus item!</div>
-                </div>
-                <div class="vip-benefit">
-                    <span>🛡️</span>
-                    <div><strong>Garansi Penuh</strong> — Garansi uang kembali 100% jika ada masalah!</div>
-                </div>
-                <div class="vip-benefit">
-                    <span>💬</span>
-                    <div><strong>Respon Cepat</strong> — Balas pesan paling cepat, tidak antri!</div>
+                <!-- PRODUK 4 -->
+                <div class="product-card">
+                    <div class="product-icon">🚀</div>
+                    <div class="product-name">APK Bug Premium</div>
+                    <div class="product-price">Rp 20.000</div>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(4)">📋 Detail</button>
+                        <button class="buy-btn" onclick="bukaTab('payment')">Beli</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- INFO TOKO -->
+        <!-- TESTIMONI PEMBELI -->
+        <div class="card">
+            <h2 class="testimoni-title">💬 Testimoni Pembeli — Klik Gambar untuk Lihat</h2>
+            <div class="testimoni-grid">
+                <!-- TESTI 1 -->
+                <div class="testimoni-card">
+                    <img src="https://i.ibb.co/9ZqXpLb/testi1.jpg" class="testimoni-img" alt="Testimoni 1" loading="lazy" onclick="lihatGambar(this.src,'Andi — Manado')">
+                    <div class="testimoni-bintang">⭐⭐⭐⭐⭐</div>
+                    <div class="testimoni-name">Andi — Manado</div>
+                    <div class="testimoni-text">"Cepat prosesnya, barang bagus, amanah bang 👍"</div>
+                </div>
+                <!-- TESTI 2 -->
+                <div class="testimoni-card">
+                    <img src="https://i.ibb.co/8ZqXpLb/testi2.jpg" class="testimoni-img" alt="Testimoni 2" loading="lazy" onclick="lihatGambar(this.src,'Rian — Bitung')">
+                    <div class="testimoni-bintang">⭐⭐⭐⭐⭐</div>
+                    <div class="testimoni-name">Rian — Bitung</div>
+                    <div class="testimoni-text">"Sesuai janji, langsung dikirim, rekomendasi 🔥"</div>
+                </div>
+                <!-- TESTI 3 -->
+                <div class="testimoni-card">
+                    <img src="https://i.ibb.co/6RK2zZY/testi3.jpg" class="testimoni-img" alt="Testimoni 3" loading="lazy" onclick="lihatGambar(this.src,'Dimas — Tomohon')">
+                    <div class="testimoni-bintang">⭐⭐⭐⭐⭐</div>
+                    <div class="testimoni-name">Dimas — Tomohon</div>
+                    <div class="testimoni-text">"Respon cepat, dibantu sampai bisa, makasih bang 🙏"</div>
+                </div>
+                <!-- TESTI 4 -->
+                <div class="testimoni-card">
+                    <img src="https://i.ibb.co/TDJwR3Y/testi4.jpg" class="testimoni-img" alt="Testimoni 4" loading="lazy" onclick="lihatGambar(this.src,'Budi — Kotamobagu')">
+                    <div class="testimoni-bintang">⭐⭐⭐⭐⭐</div>
+                    <div class="testimoni-name">Budi — Kotamobagu</div>
+                    <div class="testimoni-text">"Sudah beli berkali-kali, selalu aman & terpercaya ✅"</div>
+                </div>
+            </div>
+            <p style="text-align:center;margin-top:15px;font-size:13px;color:#888;">📸 Klik gambar di atas untuk lihat bukti asli pembelian!</p>
+        </div>
+
         <div class="card">
             <h2 class="section-title">ℹ️ Info Toko</h2>
-            <p style="font-size:14px; color:#ccc; line-height:1.8;">
+            <p style="font-size:14px;color:#ccc;line-height:1.8;">
                 ✅ Open 24 Jam<br>
                 ✅ Proses Cepat & Aman<br>
                 ✅ Garansi Uang Kembali<br>
@@ -627,27 +213,23 @@ border: 1px solid rgba(255, 170, 0, 0.2);
         </div>
     </div>
 
-    <!-- ================================== -->
-    <!-- HALAMAN 2: PEMBAYARAN + VIDEO -->
-    <!-- ================================== -->
+    <!-- PEMBAYARAN -->
     <div class="page" id="page-payment">
         <div class="card">
-            <h2 class="section-title" style="justify-content:center; font-size:22px;">💳 Pembayaran</h2>
-            <p style="text-align:center; color:#aaa; margin-bottom:20px;">Silakan bayar melalui metode di bawah</p>
+            <h2 class="section-title" style="justify-content:center;font-size:22px;">💳 Pembayaran</h2>
+            <p style="text-align:center;color:#aaa;margin-bottom:20px;">Silakan bayar melalui metode di bawah</p>
 
-            <!-- 🎥 VIDEO DI ATAS QRIS -->
             <div class="top-video-box">
-                <video class="top-video" id="topVideo" loop playsinline controls>
+                <video class="top-video" loop playsinline controls>
                     <source src="https://cdn.videy.co/ZLxBOhDP1.mp4" type="video/mp4">
-                    Browser kamu tidak mendukung video.
+                    Browser tidak mendukung video.
                 </video>
             </div>
 
-            <!-- QRIS -->
             <div class="qris-section">
                 <div class="qris-label">📱 QRIS — Semua Pembayaran</div>
                 <div class="qris-box">
-                    <img src="https://i.ibb.co/g1mZnq5/img-1788362928574.jpg" class="qris-img" alt="QRIS" loading="lazy">
+                    <img src="https://i.ibb.co/g1mZnq5/img-1788362928574.jpg" class="qris-img" alt="QRIS">
                 </div>
                 <a href="https://i.ibb.co/g1mZnq5/img-1788362928574.jpg" download="QRIS-Xav-Dynasty.jpg" class="download-qris-btn">
                     ⬇️ Download QRIS
@@ -655,117 +237,149 @@ border: 1px solid rgba(255, 170, 0, 0.2);
                 <p class="scan-text">Scan kode QR atau download untuk dipindai</p>
             </div>
 
-            <div class="divider">
-                <hr>
-                <span>Atau</span>
-                <hr>
-            </div>
+            <div class="divider"><hr><span>Atau</span><hr></div>
 
-            <!-- DANA -->
-            <h3 class="method-title">💸 Transfer E-Wallet</h3>
+            <h3 class="method-title">💳 Pembayaran Manual</h3>
             <div class="method-box">
                 <div class="method-header">
-                    <div class="method-icon">💙</div>
+                    <div class="method-icon">💰</div>
                     <div class="method-name">DANA</div>
-                    <div class="method-badge">Utama</div>
+                    <span class="method-badge">Cepat</span>
                 </div>
-                <div class="method-number" id="nomorDana">0815-4550-1924</div>
-                <div class="method-holder">a.n. Xav|Dynasty</div>
-                <button class="copy-btn" onclick="salinNomor('nomorDana', this)">📋 Salin Nomor</button>
+                <div class="method-number">0812-xxxx-xxxx</div>
+                <div class="method-holder">a.n. Nama Pemilik Akun</div>
+                <button class="copy-btn" onclick="salinNomor(this,'0812xxxxxxx')">📋 Salin Nomor</button>
             </div>
 
-            <!-- CATATAN -->
             <div class="note-box">
                 <h4>⚠️ Catatan Penting</h4>
-                <p>1. Pastikan nomor tujuan dan nama sudah benar.<br>
-                   2. Setelah bayar, simpan bukti pembayaran.<br>
-                   3. Konfirmasi ke admin agar segera diproses.</p>
+                <p>• Setelah bayar, simpan bukti pembayaran<br>
+                • Kirim bukti ke Dev di halaman berikutnya<br>
+                • Barang dikirim setelah pembayaran terverifikasi ✅</p>
             </div>
         </div>
     </div>
 
-    <!-- ================================== -->
-    <!-- HALAMAN 3: DEV / KONTAK — BARU! -->
-    <!-- ================================== -->
+    <!-- DEV / KONTAK -->
     <div class="page" id="page-dev">
         <div class="card">
-            <h2 class="section-title" style="justify-content:center; font-size:22px;">👤 Hubungi Dev</h2>
-            <p style="text-align:center; color:#aaa; margin-bottom:25px;">Punya pertanyaan? Hubungi saya langsung!</p>
+            <div class="dev-avatar">👨‍💻</div>
+            <h2 class="dev-name">Xav|Dynasty</h2>
+            <p class="dev-role">Developer & Penjual</p>
 
-            <!-- FOTO & NAMA DEV -->
-            <div class="dev-avatar">👤</div>
-            <h3 class="dev-name">Xav|Dynasty</h3>
-            <p class="dev-role">Developer & Pemilik Toko</p>
-
-            <!-- 💬 WHATSAPP -->
-            <a href="https://wa.me/6281545501924?text=Halo%20Xav%7CDynasty!%20Saya%20mau%20tanya%20tentang%20produk" target="_blank" class="contact-box">
+            <a href="https://wa.me/628xxxxxxxxx" target="_blank" class="contact-box">
                 <div class="contact-icon contact-wa">💬</div>
                 <div class="contact-info">
                     <div class="contact-label">WhatsApp</div>
-                    <div class="contact-value">+62 815-4550-1924</div>
+                    <div class="contact-value">@nama_wa</div>
                 </div>
             </a>
-
-            <!-- ✈️ TELEGRAM -->
-            <a href="https://t.me/XavDynasty" target="_blank" class="contact-box">
+            <a href="https://t.me/xxxxxx" target="_blank" class="contact-box">
                 <div class="contact-icon contact-tg">✈️</div>
                 <div class="contact-info">
                     <div class="contact-label">Telegram</div>
-                    <div class="contact-value">@XavDynasty</div>
+                    <div class="contact-value">@nama_tg</div>
                 </div>
             </a>
-
-            <!-- 🎵 TIKTOK -->
-            <a href="https://tiktok.com/@xav_dynasty" target="_blank" class="contact-box">
+            <a href="https://tiktok.com/@xxxxxx" target="_blank" class="contact-box">
                 <div class="contact-icon contact-tt">🎵</div>
                 <div class="contact-info">
-                    <div class="contact-label">TikTok — Follow & Kunjungi!</div>
-                    <div class="contact-value">@xav_dynasty</div>
+                    <div class="contact-label">TikTok</div>
+                    <div class="contact-value">@nama_tiktok</div>
                 </div>
             </a>
-
-            <!-- PESAN TAMBAHAN -->
-            <div class="note-box" style="margin-top:25px;">
-                <h4>💡 Catatan</h4>
-                <p>• Klik salah satu tombol di atas untuk langsung chat!<br>
-                   • Saya akan balas secepatnya — biasanya dalam beberapa menit ⚡<br>
-                   • Follow TikTok untuk update produk terbaru! 🎵</p>
-            </div>
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <div class="footer">
-        © 2026 Xav|Dynasty — All Rights Reserved
+    <div class="footer">© 2026 Xav|Dynasty — Semua Hak Dilindungi</div>
+</div>
+
+<!-- KOTAK BESAR GAMBAR TESTIMONI -->
+<div class="img-full-overlay" id="imgFullOverlay" onclick="tutupGambar();">
+    <div class="img-full-box" onclick="event.stopPropagation();">
+        <button class="img-full-close" onclick="tutupGambar();">✕ Tutup</button>
+        <img src="" class="img-full" id="imgFullDisplay" alt="Bukti Pembelian">
+        <p class="img-full-keterangan" id="imgFullKeterangan"></p>
     </div>
 </div>
 
-<script>
-    // === FUNGSI PINDAH HALAMAN ===
-    function bukaTab(namaTab) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('page-' + namaTab).classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // === FUNGSI SALIN NOMOR ===
-    function salinNomor(id, btn) {
-        const nomor = document.getElementById(id).innerText;
-        navigator.clipboard.writeText(nomor).then(() => {
-            btn.classList.add('copied');
-            btn.innerText = '✅ Tersalin!';
-            setTimeout(() => {
-                btn.classList.remove('copied');
-                btn.innerText = '📋 Salin Nomor';
-            }, 2500);
-        }).catch(err => {
-            alert('Gagal menyalin: ' + nomor);
-        });
-    }
-</script>
-
-</body>
-    </html>
+<!-- KOTAK DETAIL PRODUK -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this) tutupDetail();">
+    <div class="modal-box" id="detailContent"></div>
+    </div>
     
+<script>
+// === FUNGSI KLIK GAMBAR TESTIMONI ===
+function lihatGambar(src, keterangan){
+    document.getElementById('imgFullDisplay').src = src;
+    document.getElementById('imgFullKeterangan').textContent = keterangan + ' — Bukti Pembelian Asli ✅';
+    document.getElementById('imgFullOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+function tutupGambar(){
+    document.getElementById('imgFullOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+// DATA PRODUK APK BUG
+const produk = [
+    {
+        nama: "APK Bug — Versi Dasar",
+        harga: "Rp 5.000",
+        gambar: "https://i.ibb.co/6RK2zZY/apk1.jpg",
+        deskripsi: `✅ Aplikasi Bug siap pakai\n✅ Fitur dasar lengkap\n✅ Panduan cara pasang\n✅ Cocok untuk pemula\n✅ Bantuan via WA`
+    },
+    {
+        nama: "APK Bug — Versi Standar",
+        harga: "Rp 10.000",
+        gambar: "https://i.ibb.co/8ZqXpLb/apk2.jpg",
+        deskripsi: `✅ Semua fitur Versi Dasar\n✅ Fitur tambahan lebih lengkap\n✅ Update 1 minggu gratis\n✅ Anti-limit & stabil\n✅ Bantuan pasang`
+    },
+    {
+        nama: "APK Bug — Versi Lengkap",
+        harga: "Rp 15.000",
+        gambar: "https://i.ibb.co/9sF7xQj/apk3.jpg",
+        deskripsi: `✅ Semua fitur Versi Standar\n✅ Semua bug aktif & terbaru\n✅ Update gratis 1 bulan\n✅ Bisa dipakai di semua HP\n✅ Bantuan penuh`
+    },
+    {
+        nama: "APK Bug — Versi Premium",
+        harga: "Rp 20.000",
+        gambar: "https://i.ibb.co/TDJwR3Y/apk4.jpg",
+        deskripsi: `✅ Semua fitur Versi Lengkap\n✅ Bug terbaru seumur hidup\n✅ Update otomatis\n✅ Bisa jual ulang\n✅ Bantuan seumur hidup`
+    }
+];
+
+function bukaDetail(no){
+    const p = produk[no-1];
+    const konten = document.getElementById('detailContent');
+    konten.innerHTML = `
+        <img src="${p.gambar}" class="modal-img" alt="${p.nama}" loading="lazy">
+        <h3 class="modal-title">${p.nama}</h3>
+        <p class="modal-price">${p.harga}</p>
+        <div class="modal-desc">${p.deskripsi.replace(/\n/g,'<br>')}</div>
+        <button class="buy-btn" style="margin-bottom:10px;" onclick="bukaTab('payment');tutupDetail();">💳 Beli Sekarang</button>
+        <button class="modal-close" onclick="tutupDetail()">Tutup</button>
+    `;
+    document.getElementById('detailModal').classList.add('show');
+}
+
+function tutupDetail(){
+    document.getElementById('detailModal').classList.remove('show');
+}
+
+function bukaTab(namaTab){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    event.target.closest('.tab-btn')?.classList.add('active');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+namaTab).classList.add('active');
+}
+
+function salinNomor(btn,nomor){
+    navigator.clipboard.writeText(nomor).then(()=>{
+        btn.textContent='✅ Tersalin!';btn.classList.add('copied');
+        setTimeout(()=>{btn.textContent='📋 Salin Nomor';btn.classList.remove('copied');},2000);
+    });
+}
+</script>
+</body>
+</html>
