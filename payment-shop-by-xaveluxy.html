@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xav|Dynasty — Shop & Payment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background:linear-gradient(135deg,#0f0f23,#1a1a3c,#2d1b69);
+            min-height:100vh;
+            padding:20px 20px 30px;
+            color:white;
+        }
+        .container{max-width:460px;margin:0 auto;position:relative;}
+
+        /* === MENU TITIK 3 === */
+        .menu-toggle{
+            position:absolute;
+            top:0;
+            left:0;
+            width:40px;
+            height:40px;
+            border-radius:10px;
+            background:rgba(255,255,255,.08);
+            border:none;
+            color:white;
+            font-size:18px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            transition:.3s;
+            z-index:100;
+        }
+        .menu-toggle:hover{background:rgba(255,255,255,.15);}
+
+        .menu-dropdown{
+            position:absolute;
+            top:48px;
+            left:0;
+            background:#1a1a3c;
+            border-radius:14px;
+            padding:6px;
+            min-width:165px;
+            border:1px solid rgba(255,255,255,.12);
+            box-shadow:0 10px 30px rgba(0,0,0,.4);
+            opacity:0;visibility:hidden;transform:translateY(-10px);
+            transition:.3s ease;z-index:99;
+        }
+        .menu-dropdown.show{opacity:1;visibility:visible;transform:translateY(0);}
+        .menu-item{
+            width:100%;text-align:left;padding:11px 14px;border-radius:8px;
+            background:transparent;border:none;color:#ccc;font-size:14px;
+            font-weight:600;cursor:pointer;transition:.2s;
+            font-family: 'Poppins', sans-serif;display:flex;align-items:center;gap:9px;
+        }
+        .menu-item:hover{background:rgba(0,212,255,.1);color:white;}
+        .menu-item.active{background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;}
+
+        /* === HEADER — STATUS DIKECILKAN === */
+        .header{text-align:center;margin-bottom:22px;margin-top:8px;}
+        .status-bar{
+            display:inline-flex;align-items:center;gap:6px;
+            background:rgba(37,211,102,.12);padding:4px 12px;border-radius:20px;
+            margin-bottom:10px;border:1px solid rgba(37,211,102,.25);
+        }
+        .status-dot{
+            width:8px;height:8px;background:#25d366;border-radius:50%;
+            animation: kedip 2s infinite;
+        }
+        @keyframes kedip{
+            0%,100%{opacity:1;}
+            50%{opacity:.3;}
+        }
+        .status-text{color:#99ffbb;font-size:11px;font-weight:600;}
+        .header h1{
+            font-family: 'Poppins', sans-serif;font-size:26px;font-weight:800;
+            background:linear-gradient(90deg,#00d4ff,#7928ca,#ff0080);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            margin-bottom:4px;letter-spacing:.5px;
+        }
+        .header p{color:#ccc;font-size:13px;}
+        .brand-badge{
+            display:inline-flex;align-items:center;gap:7px;
+            background:rgba(121,40,202,.2);padding:6px 14px;border-radius:30px;
+            margin-top:8px;font-size:12px;color:#d8b4fe;
+            border:1px solid rgba(121,40,202,.3);font-weight:600;
+        }
+        .stats-row{
+            display:flex;justify-content:center;gap:18px;margin-top:12px;
+        }
+        .stat-item{text-align:center;}
+        .stat-num{font-size:18px;font-weight:800;color:#00d4ff;}
+        .stat-label{font-size:10px;color:#888;margin-top:2px;}
+
+        /* === NOTIFIKASI === */
+        .notif-box{
+            position:fixed;top:12px;left:50%;transform:translateX(-50%) translateY(-100px);
+            background:#1a1a3c;border:1px solid rgba(37,211,102,.4);border-radius:12px;
+            padding:10px 18px;z-index:1000;transition:.4s;
+            box-shadow:0 8px 25px rgba(0,0,0,.35);
+        }
+        .notif-box.tampil{transform:translateX(-50%) translateY(0);}
+        .notif-teks{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;}
+        .notif-icon{color:#25d366;font-size:18px;}
+
+        .card{
+            background:rgba(255,255,255,.06);backdrop-filter:blur(24px);
+            border-radius:20px;padding:22px 18px;border:1px solid rgba(255,255,255,.12);
+            margin-bottom:18px;
+        }
+        .page{display:none;}
+        .page.active{display:block;}
+        .section-title{
+            font-family: 'Poppins', sans-serif;font-size:17px;font-weight:700;
+            margin-bottom:16px;letter-spacing:.3px;display:flex;align-items:center;gap:8px;
+        }
+
+        /* === CARA PESAN === */
+        .step-box{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
+        .step-num{
+            width:30px;height:30px;border-radius:50%;
+            background:linear-gradient(135deg,#00d4ff,#7928ca);display:flex;
+            align-items:center;justify-content:center;font-weight:700;font-size:13px;
+            flex-shrink:0;
+        }
+        .step-text{flex:1;}
+        .step-title{font-weight:600;font-size:14px;margin-bottom:2px;}
+        .step-desc{font-size:12px;color:#aaa;line-height:1.5;}
+
+        /* === VIP CARD === */
+        .vip-card{
+            background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,170,0,.05));
+            border:1px solid rgba(255,215,0,.25);border-radius:16px;padding:18px;
+            margin-bottom:15px;
+        }
+        .vip-title{
+            font-family: 'Poppins', sans-serif;font-size:16px;font-weight:700;
+            color:#ffd700;margin-bottom:10px;display:flex;align-items:center;gap:8px;
+        }
+        .vip-list{font-size:13px;line-height:1.9;color:#eee;}
+
+        .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px;}
+        .product-card{
+            background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+            border-radius:16px;padding:16px 12px;text-align:center;transition:.3s;
+        }
+        .product-card:hover{border-color:rgba(0,212,255,.4);transform:translateY(-3px);background:rgba(0,212,255,.03);}
+        .product-icon{
+            width:52px;height:52px;margin:0 auto 8px;border-radius:12px;
+            background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(121,40,202,.15));
+            display:flex;align-items:center;justify-content:center;font-size:24px;
+        }
+        .product-name{font-size:13px;font-weight:600;margin-bottom:5px;}
+        .product-price{font-size:15px;font-weight:700;color:#00d4ff;margin-bottom:8px;}
+        .btn-row{display:flex;gap:7px;}
+        .detail-btn{
+            flex:1;background:rgba(255,255,255,.08);color:#ddd;border:none;
+            padding:8px 4px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;transition:.2s;
+        }
+        .detail-btn:hover{background:rgba(255,255,255,.15);}
+        .buy-btn{
+            flex:1;background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;border:none;
+            padding:8px 4px;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;transition:.2s;
+        }
+        .buy-btn:hover{transform:scale(1.03);}
+
+        .testimoni-title{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+        .testimoni-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+        .testimoni-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;transition:.3s;}
+        .testimoni-card:hover{border-color:rgba(0,212,255,.3);transform:translateY(-2px);}
+        .testimoni-img{width:100%;height:110px;object-fit:cover;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:.3s;}
+        .testimoni-img:hover{opacity:.9;transform:scale(1.02);}
+        .testimoni-name{font-size:13px;font-weight:600;margin-bottom:3px;}
+        .testimoni-text{font-size:11px;color:#aaa;line-height:1.5;}
+        .testimoni-bintang{color:#ffcc00;margin-bottom:5px;}
+        .lihat-testi-btn{background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;border:none;padding:8px 14px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:.3s;}
+        .lihat-testi-btn:hover{transform:scale(1.03);}
+
+        .img-full-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;}
+        .img-full-overlay.show{display:flex;}
+        .img-full-box{position:relative;max-width:90vw;max-height:90vh;}
+        .img-full{width:auto;max-width:100%;max-height:85vh;border-radius:12px;box-shadow:0 0 40px rgba(0,212,255,.2);}
+        .img-full-close{position:absolute;top:-40px;right:0;background:rgba(255,255,255,.15);color:white;border:none;padding:8px 16px;border-radius:8px;font-size:14px;cursor:pointer;backdrop-filter:blur(10px);}
+        .img-full-keterangan{text-align:center;margin-top:12px;color:#ddd;font-size:13px;}
+
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;}
+        .modal-overlay.show{display:flex;}
+        .modal-box{background:#1a1a3c;border-radius:20px;padding:20px;max-width:400px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid rgba(255,255,255,.15);box-shadow:0 10px 40px rgba(0,0,0,.5);}
+        .modal-img{width:100%;height:160px;object-fit:cover;border-radius:14px;margin-bottom:12px;cursor:pointer;transition:.3s;}
+        .modal-img:hover{opacity:.9;transform:scale(1.01);}
+        .modal-title{font-size:17px;font-weight:700;margin-bottom:4px;}
+        .modal-price{font-size:18px;font-weight:700;color:#00d4ff;margin-bottom:12px;}
+        .modal-desc{font-size:13px;line-height:1.8;color:#ccc;margin-bottom:16px;}
+        .modal-close{width:100%;background:rgba(255,255,255,.1);color:#fff;border:none;padding:10px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;}
+        .modal-close:hover{background:rgba(255,255,255,.2);}
+
+        .dev-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#7928ca,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 16px;box-shadow:0 0 25px rgba(121,40,202,.4);}
+        .dev-name{text-align:center;font-size:20px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,#00d4ff,#7928ca);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .dev-role{text-align:center;color:#aaa;font-size:13px;margin-bottom:20px;}
+        .contact-box{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;margin-bottom:10px;text-decoration:none;color:white;transition:.3s;}
+        .contact-box:hover{border-color:rgba(0,212,255,.4);transform:translateY(-2px);}
+        .contact-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+        .contact-wa{background:linear-gradient(135deg,#25d366,#128c7e);}
+        .contact-tg{background:linear-gradient(135deg,#0088cc,#00c6ff);}
+        .contact-tt{background:linear-gradient(135deg,#000,#25F4EE,#FE2C55);}
+        .contact-info{flex:1;}
+        .contact-label{font-size:12px;color:#aaa;margin-bottom:2px;}
+        .contact-value{font-size:14px;font-weight:600;}
+
+        .top-video-box{margin-bottom:18px;text-align:center;}
+        .top-video{width:100%;max-width:360px;height:190px;border-radius:14px;object-fit:cover;box-shadow:0 4px 20px rgba(0,200,255,.25);border:2px solid rgba(0,212,255,.35);}
+        .qris-section{text-align:center;margin-bottom:18px;}
+        .qris-label{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(90deg,#0066ff,#00ccff);padding:7px 18px;border-radius:20px;font-weight:bold;font-size:14px;margin-bottom:14px;box-shadow:0 4px 15px rgba(0,102,255,.3);}
+        .qris-box{background:#fff;border-radius:14px;padding:12px;display:inline-block;box-shadow:0 4px 20px rgba(0,200,255,.25);border:2px solid #e0e0e0;margin-bottom:10px;}
+        .qris-img{width:200px;height:200px;border-radius:6px;object-fit:contain;display:block;}
+        .download-qris-btn{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;text-decoration:none;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:600;margin-top:10px;transition:.3s;}
+        .download-qris-btn:hover{transform:translateY(-2px);}
+        .scan-text{font-size:12px;color:#aaa;margin-top:8px;}
+        .divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
+        .divider hr{flex:1;border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);}
+        .divider span{color:#777;font-size:12px;}
+        .method-title{font-size:15px;font-weight:600;margin-bottom:12px;color:#ddd;}
+        .method-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;margin-bottom:10px;transition:.3s;}
+        .method-box:hover{border-color:rgba(0,200,255,.4);transform:translateY(-2px);}
+        .method-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+        .method-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0099ff,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:18px;}
+        .method-name{font-weight:600;font-size:15px;}
+        .method-badge{margin-left:auto;background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;font-size:10px;padding:2px 7px;border-radius:8px;font-weight:bold;}
+        .method-number{font-size:17px;font-weight:700;letter-spacing:1px;margin-bottom:3px;}
+        .method-holder{font-size:12px;color:#999;margin-bottom:10px;}
+        .copy-btn{background:rgba(0,212,255,.1);color:#00d4ff;border:1px solid rgba(0,212,255,.3);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;}
+        .copy-btn:hover{background:#00d4ff;color:#000;}
+        .copy-btn.copied{background:#00ff88;color:#000;border-color:#00ff88;}
+        .note-box{background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.2);border-radius:10px;padding:13px;margin-top:16px;}
+        .note-box h4{color:#ffcc00;font-size:13px;margin-bottom:6px;font-weight:600;}
+        .note-box p{font-size:12px;color:#bbb;line-height:1.6;}
+        .footer{text-align:center;margin-top:20px;font-size:11px;color:#555;}
+        
+        .avatar-foto {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     border-radius: 50%;
+ }
+        
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- NOTIFIKASI -->
+    <div class="notif-box" id="notifBox">
+        <div class="notif-teks"><span class="notif-icon">😊</span> Oky kak Silakan Bayar</div>
+    </div>
+
+    <!-- MENU TITIK 3 -->
+    <button class="menu-toggle" id="menuToggle" onclick="bukaMenu()">⋮</button>
+    <div class="menu-dropdown" id="menuDropdown">
+        <button class="menu-item active" onclick="bukaTab('shop')">🛒 Toko</button>
+        <button class="menu-item" onclick="bukaTab('payment')">💳 Bayar</button>
+        <button class="menu-item" onclick="bukaTab('dev')">👤 Dev</button>
+        <button class="menu-item" onclick="bukaTab('cara')">📖 Cara Pesan</button>
+    </div>
+
+    <div class="header">
+        <div class="status-bar">
+            <span class="status-dot"></span>
+            <span class="status-text">Toko BUKA • 24 Jam</span>
+        </div>
+        <h1>Xav|Dynasty</h1>
+        <p>Market — Terbaik & Terpercaya</p>
+        <div class="brand-badge"> By XaveLuxy</div>
+        <div class="stats-row">
+            <div class="stat-item"><div class="stat-num">87</div><div class="stat-label">Pembeli</div></div>
+            <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Produk</div></div>
+            <div class="stat-item"><div class="stat-num">⭐5.0</div><div class="stat-label">Rating</div></div>
+        </div>
+    </div>
+
+    <!-- === HALAMAN TOKO === -->
+    <div class="page active" id="page-shop">
+        <div class="card">
+            <h2 class="section-title"> Produk Unggulan</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-icon">🤖</div>
+                    <div class="product-name">Script Bot WhatsApp</div>
+                    <div class="product-price">Rp 25.000</div>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(1)">Detail</button>
+                        <button class="buy-btn" onclick="beliSekarang()">Beli</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">⚡</div>
+                    <div class="product-name">Panel Pterodactyl</div>
+                    <div class="product-price">Rp 10.000</div>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(2)">Detail</button>
+                        <button class="buy-btn" onclick="beliSekarang()">Beli</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">📞</div>
+                    <div class="product-name">Nokos</div>
+                    <div class="product-price">Rp 10.000</div>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(3)">Detail</button>
+                        <button class="buy-btn" onclick="beliSekarang()">Beli</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">🦠</div>
+                    <div class="product-name">APK Bug</div>
+                    <div class="product-price">Rp 10.000</div>
+                    <div class="btn-row">
+                        <button class="detail-btn" onclick="bukaDetail(4)">Detail</button>
+                        <button class="buy-btn" onclick="beliSekarang()">Beli</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card vip-card">
+            <h3 class="vip-title"> Keuntungan Belanja</h3>
+            <div class="vip-list">
+                ✅ Garansi Uang Kembali<br>
+                ✅ Bantuan Penuh Sampai Berhasil<br>
+                ✅ Selalu ad diskon<br>
+                ✅ Harga Termurah<br>
+                ✅ Open Member Reseller
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="testimoni-title">
+                <span> Testimoni Pembeli</span>
+                <button class="lihat-testi-btn" onclick="bukaTestimoni()">Lihat Semua</button>
+            </div>
+            <p style="font-size:12px;color:#888;margin-top:6px;">Klik tombol untuk lihat bukti hasil pembeli</p>
+        </div>
+    </div>
+
+    <!-- === HALAMAN PEMBAYARAN === -->
+    <div class="page" id="page-payment">
+        <div class="card">
+            <h2 class="section-title" style="justify-content:center;text-align:center;"> Pembayaran</h2>
+            <p style="text-align:center;color:#aaa;margin-bottom:18px;font-size:13px;">Silakan bayar melalui salah satu cara di bawah</p>
+
+            <div class="top-video-box">
+                <video class="top-video" loop playsinline controls>
+                    <source src="https://cdn.videy.co/ZLxBOhDP1.mp4" type="video/mp4">
+                    Browser tidak mendukung video.
+                </video>
+            </div>
+
+            <div class="qris-section">
+                <div class="qris-label">🏦 QRIS — Semua Pembayaran</div>
+                <div class="qris-box">
+                    <img src="https://i.ibb.co/g1mZnq5/img-1788362928574.jpg" class="qris-img" alt="QRIS">
+                </div>
+                <a href="https://i.ibb.co/g1mZnq5/img-1788362928574.jpg" download="QRIS-Xav-Dynasty.jpg" class="download-qris-btn">⬇️ Lihat QRIS</a>
+                <p class="scan-text">Scan kode atau Scrishot untuk di pindahi</p>
+            </div>
+
+            <div class="divider"><hr><span>Atau Transfer Manual</span><hr></div>
+
+            <h3 class="method-title">Transfer ke Rekening</h3>
+            <div class="method-box">
+                <div class="method-header">
+                    <div class="method-icon">💳</div>
+                    <div class="method-name">DANA</div>
+                    <span class="method-badge">Cepat</span>
+                </div>
+                <div class="method-number">0856xxxxxxxx</div>
+                <button class="copy-btn" onclick="salinNomor(this,'085695968343')">📋 Salin Nomor</button>
+            </div>
+
+            <div class="note-box">
+                <h4>❕Catatan Penting</h4>
+                <p>• Simpan bukti setelah bayar<br>
+                • Kirim bukti ke Dev untuk konfirmasi<br>
+                • Produk dikirim setelah diverifikasi</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- === HALAMAN DEV === -->
+    <div class="page" id="page-dev">
+        <div class="card">
+            <div class="dev-avatar">
+     <img src="https://i.ibb.co/zj5np5n/img-1790118057785.jpg" alt="Avatar" class="avatar-foto">
+ </div>
+            <h2 class="dev-name">XaveLuxy</h2>
+            <p class="dev-role">Developer Siap Bantu 24 Jam</p>
+
+            <a href="https://wa.me/xxxxxxxxxxxx" target="_blank" class="contact-box">
+                <div class="contact-icon contact-wa">WA</div>
+                <div class="contact-info">
+                    <div class="contact-label">WhatsApp</div>
+                    <div class="contact-value">@kenon</div>
+                </div>
+            </a>
+            <a href="https://t.me/XaveLuxy" target="_blank" class="contact-box">
+                <div class="contact-icon contact-tg">TG</div>
+                <div class="contact-info">
+                    <div class="contact-label">Telegram</div>
+                    <div class="contact-value">@XaveLuxy</div>
+                </div>
+            </a>
+            <a href="https://tiktok.com/@ladangdynasty" target="_blank" class="contact-box">
+                <div class="contact-icon contact-tt">TT</div>
+                <div class="contact-info">
+                    <div class="contact-label">TikTok</div>
+                    <div class="contact-value">@ladangdynasty</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- === HALAMAN CARA PESAN === -->
+    <div class="page" id="page-cara">
+        <div class="card">
+            <h2 class="section-title">📖 Cara Pesan</h2>
+
+            <div class="step-box">
+                <div class="step-num">1</div>
+                <div class="step-text">
+                    <div class="step-title">Pilih Produk</div>
+                    <div class="step-desc">Klik "Beli" pada produk yang diinginkan</div>
+                </div>
+            </div>
+            <div class="step-box">
+                <div class="step-num">2</div>
+                <div class="step-text">
+                    <div class="step-title">Bayar</div>
+                    <div class="step-desc">Scan QRIS atau transfer ke nomor DANA</div>
+                </div>
+            </div>
+            <div class="step-box">
+                <div class="step-num">3</div>
+                <div class="step-text">
+                    <div class="step-title">Kirim Bukti</div>
+                    <div class="step-desc">Simpan bukti, lalu kirim ke WA/Telegram Dev</div>
+                </div>
+            </div>
+            <div class="step-box">
+                <div class="step-num">4</div>
+                <div class="step-text">
+                    <div class="step-title">Terima Produk </div>
+                    <div class="step-desc">Produk dikirim segera setelah dicek</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card vip-card">
+            <h3 class="vip-title">💡 Pertanyaan Umum</h3>
+            <div style="font-size:13px;line-height:1.9;color:#eee;">
+                <b>❓ Kapan dikirim?</b><br>
+                Biasanya langsung dalam hitungan menit<br>
+                <b>❓ Tidak bisa pakai?</b><br>
+                Bantu sampai berhasil atau uang kembali<br>
+                <b>❓ Bisa reseller?</b><br>
+                Bisa! Hubungi Dev untuk harga khusus
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">© 2025 Xav|Dynasty — Semua Hak Dilindungi</div>
+</div>
+
+<!-- GAMBAR PENUH -->
+<div class="img-full-overlay" id="imgFullOverlay" onclick="tutupGambar();">
+    <div class="img-full-box" onclick="event.stopPropagation();">
+        <button class="img-full-close" onclick="tutupGambar();">Tutup</button>
+        <img src="" class="img-full" id="imgFullDisplay" alt="Gambar">
+        <p class="img-full-keterangan" id="imgFullKeterangan"></p>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this) tutupDetail();">
+    <div class="modal-box" id="detailContent"></div>
+</div>
+
+<script>
+// === MENU ===
+function bukaMenu(){document.getElementById('menuDropdown').classList.toggle('show');}
+document.addEventListener('click', e=>{
+    if(!e.target.closest('.menu-toggle') && !e.target.closest('.menu-dropdown')){
+        document.getElementById('menuDropdown').classList.remove('show');
+    }
+});
+
+// === BELI → LANGSUNG KE PEMBAYARAN ===
+function tampilNotif(){
+    const box = document.getElementById('notifBox');
+    box.classList.add('tampil');
+    setTimeout(()=>box.classList.remove('tampil'),2500);
+}
+function beliSekarang(){
+    tampilNotif();
+    // LANGSUNG PINDAH KE HALAMAN PEMBAYARAN
+    setTimeout(()=>bukaTab('payment'),300);
+}
+
+function lihatGambar(src,keterangan){
+    document.getElementById('imgFullDisplay').src=src;
+    document.getElementById('imgFullKeterangan').textContent=keterangan;
+    document.getElementById('imgFullOverlay').classList.add('show');
+    document.body.style.overflow='hidden';
+}
+function tutupGambar(){
+    document.getElementById('imgFullOverlay').classList.remove('show');
+    document.body.style.overflow='';
+}
+
+const daftarTestimoni=[
+    {gambar:"https://i.ibb.co/21wXZxNf/img-1790056695378.jpg",nama:"Matzz — Gacor",bintang:"⭐⭐⭐",keteranganGambar:"Bukti Pembelian — Matzz",teks:"PRODUK : Apk bug member resseler perma, HARGA : 28.000 (nego) PAYMENT : Qriss, TGLPSN : 15-8-2026"},
+    {gambar:"https://i.ibb.co/5XK3yMHF/img-1790059515610.jpg",nama:"Jhong — Puas",bintang:"⭐",keteranganGambar:"Bukti Pembelian — Jhong",teks:"PRODUK : naik pangkat resseler, HARGA : 5.000, PAYMENT : Qriss, TGLPSN : 17-8-2026"},
+    {gambar:"https://i.ibb.co/gb7R139s/img-1790059799532.jpg",nama:"Yanxx — Mantap",bintang:"⭐",keteranganGambar:"Bukti Pembelian — Yanxx",teks:"PRODUK : Apk bug member harian, HARGA : 5.000, PAYMENT : Qriss, TGLPSN : 16-8-2026"}
+];
+
+function bukaTestimoni(){
+    const k=document.getElementById('detailContent');
+    let h=`<h3 class="modal-title" style="text-align:center;margin-bottom:16px;"> Testimoni Pembeli</h3><div class="testimoni-grid">`;
+    daftarTestimoni.forEach(t=>{
+        h+=`<div class="testimoni-card">
+            <img src="${t.gambar}" class="testimoni-img" alt="${t.nama}" loading="lazy"
+            onclick="tutupDetail();setTimeout(()=>lihatGambar('${t.gambar}','${t.keteranganGambar}'),200)">
+            <div class="testimoni-bintang">${t.bintang}</div>
+            <div class="testimoni-name">${t.nama}</div>
+            <div class="testimoni-text">${t.teks}</div>
+        </div>`;
+    });
+    h+=`</div><p style="text-align:center;margin:12px 0;font-size:12px;color:#888;">Klik gambar untuk lihat bukti asli</p>
+    <button class="modal-close" onclick="tutupDetail()">Tutup</button>`;
+    k.innerHTML=h;
+    document.getElementById('detailModal').classList.add('show');
+}
+
+const produk=[
+    {nama:"Script Bot WhatsApp",harga:"Rp 25.000",gambar:"https://i.ibb.co/RGB7pqk2/img-1790205828231.jpg",keteranganGambar:"Tampilan Script Bot WA",deskripsi:"✅ No Bad Sessions\n✅ Fitur 1.250+\n✅ Type caseXplugins (ESM)\n✅ No Enc 100%\n✅ Stabil\n✅ Support Button\n✅ Support button\n✅ Baileys: npm:wileys\n✅ Full pengajaran memasang script"},
+    {nama:"Panel Pterodactyl",harga:"Rp 10.000",gambar:"https://i.ibb.co/rGJGyxQq/img-1790205909619.jpg",keteranganGambar:"Tampilan Panel Pterodactyl",deskripsi:"✅ Di tutor Cara Pakai\n✅ Bisa pasang bot dll\n✅ Stabil\n✅ Tanpa Error\n✅ No delay"},
+    {nama:"Nokos All Negara",harga:"Rp 10.000",gambar:"https://i.ibb.co/FL9mQzxv/img-1790054909150.jpg",keteranganGambar:"Nokos All Negara",deskripsi:"✅ Banyak Negara\n✅ Siap Pakai Langsung\n✅ Support Semua WA"},
+    {nama:"APK Bug",harga:"Rp 10.000",gambar:"https://i.ibb.co/JwWvDkC9/img-1790055211479.jpg",keteranganGambar:"Tampilan apk Bug",deskripsi:"✅ Akses 7 Hari\n✅ Support semua Hp\n✅ Fitur Lengkap\n✅ di tutor cara pakai\n✅ cocok bug ripper(scam"}
+];
+
+function bukaDetail(no){
+    const p=produk[no-1];
+    const k=document.getElementById('detailContent');
+    k.innerHTML=`<img src="${p.gambar}" class="modal-img" alt="${p.nama}" loading="lazy" onclick="lihatGambar('${p.gambar}','${p.keteranganGambar}')">
+        <h3 class="modal-title">${p.nama}</h3>
+        <p class="modal-price">${p.harga}</p>
+        <div class="modal-desc">${p.deskripsi.replace(/\n/g,'<br>')}</div>
+        <button class="buy-btn" style="margin-bottom:10px;" onclick="beliSekarang()">Beli Sekarang</button>
+        <button class="modal-close" onclick="tutupDetail()">Tutup</button>`;
+    document.getElementById('detailModal').classList.add('show');
+}
+
+function tutupDetail(){document.getElementById('detailModal').classList.remove('show');}
+
+function bukaTab(nama){
+    document.getElementById('menuDropdown').classList.remove('show');
+    document.querySelectorAll('.menu-item').forEach(b=>b.classList.remove('active'));
+    // Tandai menu aktif
+    document.querySelectorAll('.menu-item').forEach(item=>{
+        if(item.textContent.includes(nama==='shop'?'Toko':nama==='payment'?'Bayar':nama==='dev'?'Dev':'Cara Pesan')){
+            item.classList.add('active');
+        }
+    });
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+nama).classList.add('active');
+}
+
+function salinNomor(btn,nomor){
+    navigator.clipboard.writeText(nomor).then(()=>{
+        btn.textContent='✅ Tersalin!';btn.classList.add('copied');
+        setTimeout(()=>{btn.textContent='📋 Salin Nomor';btn.classList.remove('copied');},2000);
+    });
+}
+</script>
+</body>
+</html>
