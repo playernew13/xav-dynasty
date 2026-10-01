@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynasty Stream — Tonton Dapat Cuan</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,Segoe UI,sans-serif;}
+        body{background:linear-gradient(135deg,#1a1435,#2b1f52,#1a1435);min-height:100vh;color:#fff;}
+        .container{max-width:480px;margin:0 auto;padding:18px;}
+
+        /* === MENU 3 TITIK POJOK KIRI ATAS === */
+        .menu-kiri-atas{position:fixed;top:12px;left:12px;z-index:9999;}
+        .tombol-titik{background:rgba(124,58,237,.15);border:none;border-radius:50%;width:40px;height:40px;color:#d8b4fe;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s ease;}
+        .tombol-titik:active{transform:scale(.9);}
+        .menu-latar{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:9998;opacity:0;visibility:hidden;transition:all .35s ease;}
+        .menu-latar.buka{opacity:1;visibility:visible;}
+        .menu-kotak{position:absolute;top:60px;left:15px;background:linear-gradient(135deg,#2b1f52,#1a1435);border:1px solid rgba(167,139,250,.3);border-radius:16px;padding:12px 0;min-width:200px;transform:translateY(-10px);opacity:0;transition:all .35s ease;}
+        .menu-latar.buka .menu-kotak{transform:translateY(0);opacity:1;}
+        .menu-item{padding:12px 18px;display:flex;align-items:center;gap:10px;color:#e5e7eb;cursor:pointer;transition:all .2s ease;}
+        .menu-item:hover{background:rgba(124,58,237,.2);padding-left:22px;}
+
+        /* Tombol Admin */
+        .btn-admin{position:fixed;top:12px;right:12px;background:transparent;border:none;color:rgba(255,255,255,.25);padding:6px 10px;border-radius:8px;font-size:12px;cursor:pointer;z-index:9999;transition:all .3s ease;}
+        .btn-admin:hover{color:rgba(255,255,255,.6);background:rgba(124,58,237,.15);}
+
+        /* === HALAMAN === */
+        .halaman{display:none;animation:masukHalaman .4s ease;}
+        .halaman.aktif{display:block;}
+        @keyframes masukHalaman{
+            0%{opacity:0;transform:translateY(10px);}
+            100%{opacity:1;transform:translateY(0);}
+        }
+
+        /* Header */
+        .header{text-align:center;margin-bottom:20px;margin-top:8px;}
+        .header h1{font-size:24px;font-weight:800;background:linear-gradient(90deg,#d8b4fe,#f0abff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .header p{color:#c4b5fd;font-size:13px;margin-top:4px;}
+        .status-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0;}
+        .vip-badge{background:linear-gradient(135deg,#f59e0b,#eab308);color:#000;font-weight:700;padding:4px 12px;border-radius:20px;font-size:12px;display:inline-flex;align-items:center;gap:4px;}
+        .vip-badge.aktif{box-shadow:0 0 10px rgba(245,158,11,.3);}
+        .akun-biasa{font-size:12px;color:#94a3b8;}
+        .limit-info{font-size:11px;color:#94a3b8;margin-top:4px;}
+
+        /* Notif Limit */
+        .notif-limit{background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(234,179,8,.12));border:1px solid rgba(245,158,11,.35);border-radius:12px;padding:14px;margin:12px 0;display:none;animation:naikMuncul .4s ease;}
+        .notif-limit.tampil{display:block;}
+        @keyframes naikMuncul{0%{opacity:0;transform:translateY(15px);}100%{opacity:1;transform:translateY(0);}}
+        .notif-limit h4{color:#fbbf24;font-size:14px;margin-bottom:6px;}
+        .notif-limit p{font-size:12px;color:#e5e7eb;margin-bottom:10px;}
+        .btn-daftar-vip{background:linear-gradient(135deg,#f59e0b,#d97706);border:none;border-radius:8px;padding:10px 18px;color:#000;font-weight:700;font-size:14px;cursor:pointer;width:100%;transition:transform .2s ease;}
+        .btn-daftar-vip:active{transform:scale(.97);}
+        .btn-tutup-notif{background:transparent;border:none;color:#94a3b8;font-size:11px;margin-top:8px;cursor:pointer;}
+
+        /* Halaman Saldo & Penarikan */
+        .saldo-tampil{text-align:center;padding:30px 20px;background:rgba(30,27,75,.5);border:1px solid rgba(167,139,250,.25);border-radius:16px;margin-bottom:20px;}
+        .saldo-label{font-size:14px;color:#a78bfa;margin-bottom:8px;}
+        .saldo-angka{font-size:36px;font-weight:800;color:#e9d5ff;}
+        .saldo-catatan{font-size:11px;color:#94a3b8;margin-top:8px;}
+        .pemisah{height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,.4),transparent);margin:20px 0;}
+        .form-cair h4{font-size:14px;color:#c4b5fd;margin-bottom:12px;}
+        .form-cair input{width:100%;padding:13px;margin:6px 0;background:rgba(17,24,39,.6);border:1px solid rgba(167,139,250,.2);border-radius:10px;color:#fff;outline:none;font-size:15px;transition:border .2s ease;}
+        .form-cair input:focus{border-color:#a78bfa;}
+        .btn-cair-besar{width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;border-radius:12px;color:#fff;font-weight:700;font-size:16px;cursor:pointer;margin-top:10px;transition:all .3s ease;}
+        .btn-cair-besar:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+        .btn-cair-besar:active{transform:scale(.97);}
+        .info-minimal{font-size:12px;color:#94a3b8;text-align:center;margin-top:10px;}
+
+        /* Modal Upload & VIP */
+        .modal-latar{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:998;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .35s ease;}
+        .modal-latar.buka{opacity:1;visibility:visible;}
+        .modal-kotak{background:linear-gradient(135deg,#2b1f52,#1a1435);border:1px solid rgba(167,139,250,.3);border-radius:16px;padding:25px;max-width:400px;width:100%;transform:scale(.85);transition:transform .35s ease;}
+        .modal-latar.buka .modal-kotak{transform:scale(1);}
+        .modal-kotak h3{color:#d8b4fe;margin-bottom:15px;text-align:center;}
+        .modal-tutup{position:absolute;top:15px;right:15px;background:transparent;border:none;color:#94a3b8;font-size:20px;cursor:pointer;}
+        .modal-isi{position:relative;}
+        .modal-kotak input{width:100%;padding:12px;margin:8px 0;background:rgba(17,24,39,.6);border:1px solid rgba(167,139,250,.2);border-radius:10px;color:#fff;outline:none;font-size:15px;}
+        .modal-baris{display:flex;gap:10px;margin-top:15px;}
+        .modal-btn-utama{flex:1;padding:12px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;transition:transform .2s ease;}
+        .modal-btn-utama:active{transform:scale(.97);}
+        .modal-btn-batal{padding:12px 16px;background:transparent;border:1px solid #6b7280;border-radius:10px;color:#9ca3af;cursor:pointer;transition:all .2s ease;}
+        .modal-btn-batal:hover{border-color:#f87171;color:#f87171;}
+        .modal-vip-harga{font-size:28px;font-weight:800;color:#fbbf24;text-align:center;margin:10px 0;}
+        .modal-vip-desc{font-size:13px;color:#d1d5db;line-height:1.8;margin:15px 0;}
+        .modal-vip-dana{background:rgba(245,158,11,.1);border-radius:8px;padding:10px;text-align:center;margin:12px 0;}
+        .modal-vip-dana strong{color:#fbbf24;font-size:16px;}
+
+        /* Halaman Admin */
+        .halaman-admin{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,8,24,.98);z-index:999;display:none;overflow-y:auto;padding:20px;}
+        .halaman-admin.buka{display:block;}
+        .kotak-kode{text-align:center;padding-top:100px;}
+        .kotak-kode input{padding:14px;width:260px;font-size:18px;text-align:center;border-radius:10px;border:none;background:rgba(49,46,129,.6);color:#fff;outline:none;}
+        .btn-masuk{margin-top:12px;padding:12px 30px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;}
+        .isi-admin{display:none;}
+        .isi-admin.tampil{display:block;}
+        .tutup-admin{position:absolute;top:20px;right:20px;background:transparent;border:none;color:#f87171;font-size:24px;cursor:pointer;}
+        .bagian{background:rgba(30,27,75,.5);border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:15px;margin-bottom:15px;}
+        .bagian h3{margin-bottom:12px;color:#d8b4fe;}
+        .item-permintaan, .item-vip{background:rgba(49,46,129,.4);padding:10px;border-radius:8px;margin-bottom:8px;}
+        .btn-aktifkan-vip{background:linear-gradient(135deg,#f59e0b,#eab308);border:none;border-radius:6px;padding:6px 12px;color:#000;font-weight:600;font-size:12px;margin-top:6px;cursor:pointer;}
+        .btn-hapus-permintaan{background:transparent;border:none;color:#f87171;font-size:12px;margin-left:8px;cursor:pointer;}
+        .input-pengaturan{width:100%;padding:10px;margin:6px 0;background:rgba(17,24,39,.6);border:1px solid rgba(167,139,250,.2);border-radius:8px;color:#fff;outline:none;}
+        .btn-simpan-pengaturan{background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;border-radius:8px;padding:10px 15px;color:#fff;font-weight:600;cursor:pointer;margin-top:8px;}
+
+        /* Video */
+        .video-box{background:rgba(30,27,75,.5);border:1px solid rgba(167,139,250,.25);border-radius:16px;padding:10px;margin-bottom:15px;}
+        .video-player{width:100%;max-height:220px;border-radius:12px;outline:none;}
+        .filter-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+        .btn-filter{background:rgba(49,46,129,.5);border:1px solid rgba(167,139,250,.2);border-radius:8px;padding:8px 14px;color:#c4b5fd;cursor:pointer;transition:.3s;}
+        .btn-filter.aktif{background:linear-gradient(135deg,#7c3aed,#a855f7);border-color:transparent;color:#fff;}
+        .playlist-title{font-size:18px;font-weight:700;margin:15px 0 10px;color:#d8b4fe;}
+        .daftar-video{display:flex;flex-direction:column;gap:10px;}
+        .item-video{background:rgba(49,46,129,.4);border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;transition:.3s;}
+        .btn-play{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:#fff;font-size:16px;cursor:pointer;flex-shrink:0;}
+        .info-video{flex:1;min-width:0;}
+        .nama-video{font-weight:600;font-size:14px;margin-bottom:4px;}
+        .meta-video{font-size:11px;color:#a78bfa;display:flex;gap:8px;flex-wrap:wrap;}
+        .pendapatan{font-size:11px;color:#f0abfc;margin-top:4px;display:none;}
+        .pendapatan.lihat-saya{display:block;}
+        .btn-hapus{background:transparent;border:none;color:#f87171;cursor:pointer;font-size:16px;padding:4px;flex-shrink:0;}
+        .btn-tambah{width:100%;margin-top:10px;padding:13px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;border-radius:12px;color:#fff;font-weight:700;cursor:pointer;transition:transform .2s ease;}
+        .btn-tambah:active{transform:scale(.98);}
+        .notif{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;padding:12px 25px;border-radius:30px;font-weight:600;opacity:0;transition:.3s;z-index:9999;}
+        .notif.tampil{opacity:1;}
+    </style>
+</head>
+<body>
+
+<!-- MENU 3 TITIK -->
+<div class="menu-kiri-atas">
+    <button class="tombol-titik" onclick="bukaMenu()">⋮</button>
+</div>
+<div class="menu-latar" id="menuLatar" onclick="tutupMenu()">
+    <div class="menu-kotak" onclick="event.stopPropagation()">
+        <div class="menu-item" onclick="pindahHalaman('film')">
+            🎬 <span>Daftar Film</span>
+        </div>
+        <div class="menu-item" onclick="pindahHalaman('saldo')">
+            💰 <span>Saldo & Penarikan</span>
+        </div>
+    </div>
+</div>
+
+<button class="btn-admin" onclick="bukaHalamanAdmin()">Admin</button>
+<div class="notif" id="notif"></div>
+
+<div class="container">
+    <div class="header">
+        <h1>BROW-X2X</h1>
+        <p>Tonton & Dapat Pendapatan Sebagai Pembuat</p>
+        <div class="status-bar" id="statusBar">
+            <span class="akun-biasa" id="teksStatus"></span>
+        </div>
+        <div class="limit-info" id="infoBatasUpload"></div>
+    </div>
+
+    <!-- HALAMAN 1: DAFTAR FILM -->
+    <div class="halaman aktif" id="halamanFilm">
+        <div class="notif-limit" id="notifLimit">
+            <h4>⚠️ Batas Upload Tercapai!</h4>
+            <p>Kamu sudah upload 5 video. Upgrade ke VIP untuk upload TANPA BATAS!</p>
+            <button class="btn-daftar-vip" onclick="bukaModalVIP()">👑 Daftar VIP — Rp 20.000/Bulan</button>
+            <button class="btn-tutup-notif" onclick="tutupNotifLimit()">Tutup</button>
+        </div>
+
+        <div class="video-box">
+            <video id="pemain" class="video-player" controls onplay="hitungTonton()">
+                <source src="https://cdn.videy.co/Jg8gagdz1.mp4" type="video/mp4">
+                Browser tidak mendukung video.
+            </video>
+        </div>
+
+        <div class="filter-row">
+            <button class="btn-filter aktif" onclick="urutkan('semua')">📅 Tanggal</button>
+            <button class="btn-filter" onclick="urutkan('terbaru')">⏰ Terbaru</button>
+            <button class="btn-filter" onclick="urutkan('populer')">🔥 Populer</button>
+        </div>
+
+        <h3 class="playlist-title">Daftar Video Public</h3>
+        <div class="daftar-video" id="daftarVideo"></div>
+
+        <button class="btn-tambah" id="btnTambahVideo" onclick="cekBatasLaluBuka()">+ Upload Video Saya</button>
+    </div>
+
+    <!-- HALAMAN 2: SALDO & PENARIKAN -->
+    <div class="halaman" id="halamanSaldo">
+        <div class="saldo-tampil">
+            <div class="saldo-label">Pendapatan Kamu</div>
+            <div class="saldo-angka" id="saldoPengguna">Rp 0</div>
+            <div class="saldo-catatan">*Hanya pembuat video yang dapat pendapatan</div>
+        </div>
+
+        <div class="pemisah"></div>
+
+        <div class="form-cair">
+            <h4>Data Penarikan</h4>
+            <input type="text" id="namaPemilikDana" placeholder="Nama Pemilik Rekening DANA">
+            <input type="text" id="nomorDanaPencairan" placeholder="Nomor DANA">
+            <button class="btn-cair-besar" id="btnCair" onclick="ajukanCair()">Ajukan Penarikan</button>
+            <div class="info-minimal" id="infoMinimal">Minimal penarikan: Rp 2.000</div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Upload -->
+<div class="modal-latar" id="modalUpload">
+    <div class="modal-kotak">
+        <div class="modal-isi">
+            <button class="modal-tutup" onclick="tutupModalUpload()">✕</button>
+            <h3>📤 Upload Video Saya</h3>
+            <input type="text" id="inputNama" placeholder="Nama video...">
+            <input type="url" id="inputLink" placeholder="Link video (.mp4)...">
+            <input type="text" id="inputPembuat" placeholder="Nama Kamu (Pembuat)...">
+            <div class="modal-baris">
+                <button class="modal-btn-batal" onclick="tutupModalUpload()">Batal</button>
+                <button class="modal-btn-utama" onclick="simpanVideo()">Upload Video</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal VIP -->
+<div class="modal-latar" id="modalVIP">
+    <div class="modal-kotak">
+        <div class="modal-isi">
+            <button class="modal-tutup" onclick="tutupModalVIP()">✕</button>
+            <h3>👑 Upgrade ke VIP</h3>
+            <div class="modal-vip-harga">Rp 20.000 / Bulan</div>
+            <div class="modal-vip-desc">
+                ✅ Upload Video <strong>TANPA BATAS</strong><br>
+                ✅ Pendapatan Lebih Besar<br>
+                ✅ Fitur Khusus Anggota VIP
+            </div>
+            <div class="modal-vip-dana">
+                Bayar ke DANA:<br>
+                <strong id="nomorDanaTampil">0812xxxxxxx</strong>
+            </div>
+            <input type="text" id="namaPemohonVIP" placeholder="Nama Lengkap...">
+            <input type="text" id="nomorDanaVIP" placeholder="Nomor DANA...">
+            <div class="modal-baris">
+                <button class="modal-btn-batal" onclick="tutupModalVIP()">Batal</button>
+                <button class="modal-btn-utama" onclick="kirimPermintaanVIP()">Kirim Permintaan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Halaman Admin -->
+<div class="halaman-admin" id="halamanAdmin">
+    <button class="tutup-admin" onclick="tutupHalamanAdmin()">✕</button>
+    
+    <div class="kotak-kode" id="kotakKode">
+        <h2 style="color:#d8b4fe;margin-bottom:20px;">Masuk Kode Admin</h2>
+        <input type="password" id="inputKode" placeholder="Masukkan kode rahasia...">
+        <br>
+        <button class="btn-masuk" onclick="cekKodeAdmin()">Masuk</button>
+        <p style="margin-top:15px;font-size:12px;color:#94a3b8;">Kode rahasia hanya kamu yang tahu</p>
+    </div>
+
+    <div class="isi-admin" id="isiAdmin">
+        <h2 style="text-align:center;color:#d8b4fe;margin-bottom:20px;">⚙️ Panel Admin — Dynasty Stream</h2>
+        <div class="bagian">
+            <h3>🔧 Pengaturan Sistem</h3>
+            <label style="font-size:13px;color:#c4b5fd;">Uang per 1 tontonan (Rp):</label>
+            <input type="number" class="input-pengaturan" id="aturanPerTonton" value="50">
+            <label style="font-size:13px;color:#c4b5fd;">Minimal cair ke DANA (Rp):</label>
+            <input type="number" class="input-pengaturan" id="aturanMinCair" value="2000">
+            <label style="font-size:13px;color:#c4b5fd;">Batas upload non-VIP:</label>
+            <input type="number" class="input-pengaturan" id="batasUploadBiasa" value="5">
+            <button class="btn-simpan-pengaturan" onclick="simpanPengaturan()">Simpan Pengaturan</button>
+        </div>
+        <div class="bagian">
+            <h3>👑 Permintaan Aktifasi VIP</h3>
+            <div id="daftarPermintaanVIP"><p style="color:#94a3b8;font-size:13px;">Belum ada permintaan</p></div>
+        </div>
+        <div class="bagian">
+            <h3>📋 Permintaan Cair DANA</h3>
+            <div id="daftarPermintaan"><p style="color:#94a3b8;font-size:13px;">Belum ada permintaan</p></div>
+        </div>
+        <div class="bagian">
+            <h3>🎬 Semua Video</h3>
+            <div id="daftarSemuaVideo"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ==============================================
+// 🔐 GANTI KODE RAHASIA ADMIN DI BAWAH INI!
+// ==============================================
+const KODE_ADMIN = '123456';
+// ==============================================
+// 💰 GANTI NOMOR DANA KAMU DI BAWAH INI!
+// ==============================================
+const NOMOR_DANA_ADMIN = '0812xxxxxxx';
+document.getElementById('nomorDanaTampil').textContent = NOMOR_DANA_ADMIN;
+// ==============================================
+
+const SALDO_KEY = 'saldoPembuat';
+const TONTONAN_KEY = 'sudahTonton';
+const PERMINTAAN_KEY = 'permintaanCair';
+const PERMINTAAN_VIP_KEY = 'permintaanVIP';
+const STATUS_VIP_KEY = 'statusVIP';
+const PENGATURAN_KEY = 'pengaturanSistem';
+
+let pengaturan = JSON.parse(localStorage.getItem(PENGATURAN_KEY)) || {
+    uangPerTonton: 50, minCair: 2000, batasUploadBiasa: 5
+};
+
+let daftarVideo = JSON.parse(localStorage.getItem('daftarVideo')) || [
+    { nama: 'Film keren Wak art 100', link: 'https://cdn.videy.co/Jg8gagdz1.mp4', pembuat: 'Xav|Dynasty', penonton: 0, pendapatan: 0, waktu: Date.now() }
+];
+
+let saldoPengguna = parseInt(localStorage.getItem(SALDO_KEY)) || 0;
+let sudahTonton = JSON.parse(localStorage.getItem(TONTONAN_KEY)) || {};
+let namaSaya = localStorage.getItem('namaSaya') || '';
+
+// === PILIH HALAMAN — LEWAT MENU SAJA ===
+function pindahHalaman(halaman){
+    tutupMenu();
+    document.getElementById('halamanFilm').classList.remove('aktif');
+    document.getElementById('halamanSaldo').classList.remove('aktif');
+    if(halaman === 'film'){
+        document.getElementById('halamanFilm').classList.add('aktif');
+        window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+        document.getElementById('halamanSaldo').classList.add('aktif');
+        tampilSaldo();
+    }
+}
+
+// === MENU 3 TITIK ===
+function bukaMenu(){ document.getElementById('menuLatar').classList.add('buka'); }
+function tutupMenu(){ document.getElementById('menuLatar').classList.remove('buka'); }
+
+// === CEK STATUS VIP ===
+function cekStatusVIP(){
+    const s = JSON.parse(localStorage.getItem(STATUS_VIP_KEY)) || {aktif:false,sampai:0};
+    return s.aktif && s.sampai > Date.now();
+}
+function tampilStatusVIP(){
+    const isVip = cekStatusVIP();
+    const el = document.getElementById('teksStatus');
+    el.outerHTML = isVip ? '<span class="vip-badge aktif">👑 VIP Aktif</span>' : '<span class="akun-biasa">Akun Biasa</span>';
+    updateInfoBatas();
+}
+function updateInfoBatas(){
+    const isVip = cekStatusVIP();
+    const milikSaya = daftarVideo.filter(v => v.pembuat === namaSaya);
+    const info = document.getElementById('infoBatasUpload');
+    const notif = document.getElementById('notifLimit');
+    if(isVip){
+        info.textContent = '✅ VIP — Upload tanpa batas';
+        info.style.color = '#fbbf24';
+        notif.classList.remove('tampil');
+    } else {
+        info.textContent = `${milikSaya.length}/${pengaturan.batasUploadBiasa} video — tersisa ${Math.max(0, pengaturan.batasUploadBiasa - milikSaya.length)}`;
+        info.style.color = '#94a3b8';
+        notif.classList.toggle('tampil', milikSaya.length >= pengaturan.batasUploadBiasa);
+    }
+}
+function tutupNotifLimit(){ document.getElementById('notifLimit').classList.remove('tampil'); }
+
+// === MODAL UPLOAD ===
+function cekBatasLaluBuka(){
+    const milikSaya = daftarVideo.filter(v => v.pembuat === namaSaya);
+    if(!cekStatusVIP() && milikSaya.length >= pengaturan.batasUploadBiasa){
+        document.getElementById('notifLimit').classList.add('tampil');
+        tampilkanNotif(`❌ Maksimal ${pengaturan.batasUploadBiasa} video! Upgrade VIP`);
+        return;
+    }
+    document.getElementById('modalUpload').classList.add('buka');
+}
+function tutupModalUpload(){
+    document.getElementById('modalUpload').classList.remove('buka');
+    ['inputNama','inputLink','inputPembuat'].forEach(id=>document.getElementById(id).value='');
+}
+
+// === MODAL VIP ===
+function bukaModalVIP(){
+    document.getElementById('modalVIP').classList.add('buka');
+    document.getElementById('notifLimit').classList.remove('tampil');
+}
+function tutupModalVIP(){
+    document.getElementById('modalVIP').classList.remove('buka');
+    ['namaPemohonVIP','nomorDanaVIP'].forEach(id=>document.getElementById(id).value='');
+}
+function kirimPermintaanVIP(){
+    const nama = document.getElementById('namaPemohonVIP').value.trim();
+    const nomor = document.getElementById('nomorDanaVIP').value.trim();
+    if(!nama || !nomor) return alert('Isi semua data!');
+    namaSaya = nama; localStorage.setItem('namaSaya', nama);
+    const daftar = JSON.parse(localStorage.getItem(PERMINTAAN_VIP_KEY)) || [];
+    daftar.push({nama,nomor,waktu:new Date().toLocaleString('id-ID')});
+    localStorage.setItem(PERMINTAAN_VIP_KEY, JSON.stringify(daftar));
+    tutupModalVIP(); tampilkanNotif('✅ Dikirim! Tunggu Admin aktifkan');
+}
+
+// === HALAMAN ADMIN ===
+function bukaHalamanAdmin(){ document.getElementById('halamanAdmin').classList.add('buka'); }
+function tutupHalamanAdmin(){ document.getElementById('halamanAdmin').classList.remove('buka'); }
+function cekKodeAdmin(){
+    if(document.getElementById('inputKode').value === KODE_ADMIN){
+        document.getElementById('kotakKode').style.display = 'none';
+        document.getElementById('isiAdmin').classList.add('tampil');
+        muatPengaturan(); muatPermintaanVIP(); muatPermintaan(); muatSemuaVideo();
+    } else tampilkanNotif('❌ Kode salah!');
+}
+function muatPengaturan(){
+    document.getElementById('aturanPerTonton').value = pengaturan.uangPerTonton;
+    document.getElementById('aturanMinCair').value = pengaturan.minCair;
+    document.getElementById('batasUploadBiasa').value = pengaturan.batasUploadBiasa;
+}
+function simpanPengaturan(){
+    pengaturan.uangPerTonton = +document.getElementById('aturanPerTonton').value;
+    pengaturan.minCair = +document.getElementById('aturanMinCair').value;
+    pengaturan.batasUploadBiasa = +document.getElementById('batasUploadBiasa').value;
+    localStorage.setItem(PENGATURAN_KEY, JSON.stringify(pengaturan));
+    tampilkanNotif('✅ Tersimpan!'); updateInfoBatas();
+}
+function muatPermintaanVIP(){
+    const wadah = document.getElementById('daftarPermintaanVIP');
+    const daftar = JSON.parse(localStorage.getItem(PERMINTAAN_VIP_KEY)) || [];
+    if(!daftar.length) return wadah.innerHTML = '<p style="color:#94a3b8;font-size:13px;">Belum ada permintaan</p>';
+    wadah.innerHTML = '';
+    daftar.forEach((p,i)=>{
+        const el = document.createElement('div'); el.className='item-vip';
+        el.innerHTML = `<p><strong>Nama:</strong> ${p.nama}</p><p><strong>No.DANA:</strong> ${p.nomor}</p><p style="font-size:11px;color:#888;">${p.waktu}</p><button class="btn-aktifkan-vip" onclick="aktifkanVIP(${i})">✅ Aktifkan 1 Bulan</button> <button class="btn-hapus-permintaan" onclick="hapusPermintaanVIP(${i})">Hapus</button>`;
+        wadah.appendChild(el);
+    });
+}
+function aktifkanVIP(i){
+    const d = JSON.parse(localStorage.getItem(PERMINTAAN_VIP_KEY)) || [];
+    const p = d[i];
+    localStorage.setItem(STATUS_VIP_KEY, JSON.stringify({aktif:true,sampai:Date.now()+30*86400000,nama:p.nama}));
+    d.splice(i,1); localStorage.setItem(PERMINTAAN_VIP_KEY, JSON.stringify(d));
+    muatPermintaanVIP(); tampilkanNotif(`✅ VIP ${p.nama} diaktifkan!`); tampilStatusVIP();
+}
+function hapusPermintaanVIP(i){
+    if(confirm('Hapus?')){
+        let d = JSON.parse(localStorage.getItem(PERMINTAAN_VIP_KEY)) || [];
+        d.splice(i,1); localStorage.setItem(PERMINTAAN_VIP_KEY, JSON.stringify(d));
+        muatPermintaanVIP();
+    }
+}
+function muatPermintaan(){
+    const wadah = document.getElementById('daftarPermintaan');
+    const daftar = JSON.parse(localStorage.getItem(PERMINTAAN_KEY)) || [];
+    if(!daftar.length) return wadah.innerHTML = '<p style="color:#94a3b8;font-size:13px;">Belum ada permintaan</p>';
+    wadah.innerHTML = '';
+    daftar.forEach((p,i)=>{
+        const el = document.createElement('div'); el.className='item-permintaan';
+        el.innerHTML = `<p><strong>Nama:</strong> ${p.nama}</p><p><strong>No.DANA:</strong> ${p.nomor}</p><p><strong>Jumlah:</strong> Rp ${p.jumlah.toLocaleString('id-ID')}</p><p style="font-size:11px;color:#888;">${p.waktu}</p><button class="btn-aktifkan-vip" onclick="tandaiSudahDibayar(${i})">✅ Sudah Dibayar</button> <button class="btn-hapus-permintaan" onclick="hapusPermintaan(${i})">Hapus</button>`;
+        wadah.appendChild(el);
+    });
+}
+function tandaiSudahDibayar(i){
+    let d = JSON.parse(localStorage.getItem(PERMINTAAN_KEY)) || []; d.splice(i,1);
+    localStorage.setItem(PERMINTAAN_KEY, JSON.stringify(d)); muatPermintaan();
+    tampilkanNotif('✅ Ditandai sudah dibayar!');
+}
+function hapusPermintaan(i){
+    if(confirm('Yakin hapus?')){
+        let d = JSON.parse(localStorage.getItem(PERMINTAAN_KEY)) || []; d.splice(i,1);
+        localStorage.setItem(PERMINTAAN_KEY, JSON.stringify(d)); muatPermintaan();
+    }
+}
+function muatSemuaVideo(){
+    const wadah = document.getElementById('daftarSemuaVideo'); wadah.innerHTML = '';
+    daftarVideo.forEach((v,i)=>{
+        const el = document.createElement('div'); el.style='background:rgba(49,46,129,.4);padding:10px;border-radius:8px;margin-bottom:8px;';
+        el.innerHTML = `<p><strong>${v.nama}</strong></p><p style="font-size:12px;color:#a78bfa;">Pembuat: ${v.pembuat} | Ditonton: ${v.penonton||0} | Pendapatan: Rp ${(v.pendapatan||0).toLocaleString('id-ID')}</p><button style="background:transparent;border:none;color:#f87171;font-size:12px;cursor:pointer;" onclick="hapusVideoAdmin(${i})">🗑️ Hapus Video</button>`;
+        wadah.appendChild(el);
+    });
+}
+function hapusVideoAdmin(i){
+    if(confirm('Hapus video ini?')){
+        daftarVideo.splice(i,1); localStorage.setItem('daftarVideo', JSON.stringify(daftarVideo));
+        tampilkanVideo(); muatSemuaVideo();
+    }
+}
+
+// === SALDO & PENARIKAN ===
+function tampilSaldo(){
+    document.getElementById('saldoPengguna').textContent = 'Rp ' + saldoPengguna.toLocaleString('id-ID');
+    const btn = document.getElementById('btnCair');
+    btn.disabled = saldoPengguna < pengaturan.minCair;
+    document.getElementById('infoMinimal').textContent = `Minimal penarikan: Rp ${pengaturan.minCair.toLocaleString('id-ID')}`;
+}
+function hitungTonton(){
+    const url = document.getElementById('pemain').src;
+    if(!url || sudahTonton[url]) return;
+    sudahTonton[url] = true; localStorage.setItem(TONTONAN_KEY, JSON.stringify(sudahTonton));
+    const vid = daftarVideo.find(v => v.link === url); if(!vid) return;
+    vid.penonton = (vid.penonton || 0) + 1;
+    vid.pendapatan = (vid.pendapatan || 0) + pengaturan.uangPerTonton;
+    if(namaSaya && namaSaya === vid.pembuat){
+        saldoPengguna += pengaturan.uangPerTonton;
+        localStorage.setItem(SALDO_KEY, saldoPengguna);
+        tampilSaldo();
+        tampilkanNotif(`✅ Videomu ditonton! +Rp ${pengaturan.uangPerTonton}`);
+    }
+    localStorage.setItem('daftarVideo', JSON.stringify(daftarVideo));
+    tampilkanVideo();
+}
+function ajukanCair(){
+    if(saldoPengguna < pengaturan.minCair){
+        tampilkanNotif(`Minimal cair Rp ${pengaturan.minCair.toLocaleString('id-ID')}`);
+        return;
+    }
+    const nama = document.getElementById('namaPemilikDana').value.trim();
+    const nomor = document.getElementById('nomorDanaPencairan').value.trim();
+    if(!nama || !nomor) return alert('Isi nama & nomor DANA dulu!');
+    const daftar = JSON.parse(localStorage.getItem(PERMINTAAN_KEY)) || [];
+    daftar.push({nama,nomor,jumlah:saldoPengguna,waktu:new Date().toLocaleString('id-ID')});
+    localStorage.setItem(PERMINTAAN_KEY, JSON.stringify(daftar));
+    saldoPengguna = 0; localStorage.setItem(SALDO_KEY, 0);
+    tampilSaldo();
+    document.getElementById('namaPemilikDana').value = '';
+    document.getElementById('nomorDanaPencairan').value = '';
+    tampilkanNotif('✅ Permintaan dikirim! Tunggu Admin proses');
+}
+
+// === TAMPILAN VIDEO ===
+function tampilkanVideo(){
+    const wadah = document.getElementById('daftarVideo'); wadah.innerHTML = '';
+    daftarVideo.forEach((vid,i)=>{
+        const sayaPunya = namaSaya && namaSaya === vid.pembuat;
+        const el = document.createElement('div'); el.className='item-video';
+        el.innerHTML = `<button class="btn-play" onclick="mainkan(${i})">▶</button><div class="info-video"><div class="nama-video">${vid.nama}</div><div class="meta-video"><span>👁️ ${vid.penonton||0} ditonton</span><span>✍️ ${vid.pembuat}</span></div><div class="pendapatan ${sayaPunya?'lihat-saya':''}">💰 Pendapatan: Rp ${(vid.pendapatan||0).toLocaleString('id-ID')}</div></div>${sayaPunya?`<button class="btn-hapus" onclick="hapusVideo(${i})">🗑️</button>`:''}`;
+        wadah.appendChild(el);
+    });
+    updateInfoBatas();
+}
+function mainkan(i){
+    const p = document.getElementById('pemain');
+    p.src = daftarVideo[i].link; p.play();
+}
+function simpanVideo(){
+    const nama = document.getElementById('inputNama').value.trim();
+    const link = document.getElementById('inputLink').value.trim();
+    const pembuat = document.getElementById('inputPembuat').value.trim();
+    if(!nama || !link || !pembuat) return alert('Isi semua data dulu!');
+    namaSaya = pembuat; localStorage.setItem('namaSaya', pembuat);
+    daftarVideo.unshift({nama,link,pembuat,penonton:0,pendapatan:0,waktu:Date.now()});
+    localStorage.setItem('daftarVideo', JSON.stringify(daftarVideo));
+    tutupModalUpload(); tampilkanVideo();
+    tampilkanNotif('✅ Video berhasil diupload!');
+}
+function hapusVideo(i){
+    if(daftarVideo[i].pembuat !== namaSaya) return alert('Kamu hanya bisa hapus videomu sendiri!');
+    if(confirm('Yakin hapus videomu ini?')){
+        daftarVideo.splice(i,1); localStorage.setItem('daftarVideo', JSON.stringify(daftarVideo));
+        tampilkanVideo();
+    }
+}
+function urutkan(tipe){
+    document.querySelectorAll('.btn-filter').forEach(b=>b.classList.remove('aktif'));
+    event.target.classList.add('aktif');
+    if(tipe==='terbaru') daftarVideo.sort((a,b)=>b.waktu-a.waktu);
+    if(tipe==='populer') daftarVideo.sort((a,b)=>(b.penonton||0)-(a.penonton||0));
+    tampilkanVideo();
+}
+function tampilkanNotif(teks){
+    const n = document.getElementById('notif'); n.textContent=teks; n.classList.add('tampil');
+    setTimeout(()=>n.classList.remove('tampil'),2500);
+}
+
+tampilStatusVIP(); tampilSaldo(); tampilkanVideo();
+</script>
+
+</body>
+</html>
