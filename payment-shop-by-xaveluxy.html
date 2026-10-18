@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xav|Dynasty — Shop & Payment</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
         body{
-            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Roboto, Inter, sans-serif;
             background:linear-gradient(135deg,#0f0f23,#1a1a3c,#2d1b69);
             min-height:100vh;
             padding:20px 20px 30px;
@@ -57,12 +54,12 @@
             width:100%;text-align:left;padding:11px 14px;border-radius:8px;
             background:transparent;border:none;color:#ccc;font-size:14px;
             font-weight:600;cursor:pointer;transition:.2s;
-            font-family: 'Poppins', sans-serif;display:flex;align-items:center;gap:9px;
+            display:flex;align-items:center;gap:9px;
         }
         .menu-item:hover{background:rgba(0,212,255,.1);color:white;}
         .menu-item.active{background:linear-gradient(90deg,#00d4ff,#7928ca);color:white;}
 
-        /* === HEADER — STATUS DIKECILKAN === */
+        /* === HEADER === */
         .header{text-align:center;margin-bottom:22px;margin-top:8px;}
         .status-bar{
             display:inline-flex;align-items:center;gap:6px;
@@ -79,7 +76,7 @@
         }
         .status-text{color:#99ffbb;font-size:11px;font-weight:600;}
         .header h1{
-            font-family: 'Poppins', sans-serif;font-size:26px;font-weight:800;
+            font-size:26px;font-weight:800;
             background:linear-gradient(90deg,#00d4ff,#7928ca,#ff0080);
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;
             margin-bottom:4px;letter-spacing:.5px;
@@ -117,7 +114,7 @@
         .page{display:none;}
         .page.active{display:block;}
         .section-title{
-            font-family: 'Poppins', sans-serif;font-size:17px;font-weight:700;
+            font-size:17px;font-weight:700;
             margin-bottom:16px;letter-spacing:.3px;display:flex;align-items:center;gap:8px;
         }
 
@@ -140,7 +137,7 @@
             margin-bottom:15px;
         }
         .vip-title{
-            font-family: 'Poppins', sans-serif;font-size:16px;font-weight:700;
+            font-size:16px;font-weight:700;
             color:#ffd700;margin-bottom:10px;display:flex;align-items:center;gap:8px;
         }
         .vip-list{font-size:13px;line-height:1.9;color:#eee;}
@@ -196,7 +193,7 @@
         .modal-img:hover{opacity:.9;transform:scale(1.01);}
         .modal-title{font-size:17px;font-weight:700;margin-bottom:4px;}
         .modal-price{font-size:18px;font-weight:700;color:#00d4ff;margin-bottom:12px;}
-        .modal-desc{font-size:13px;line-height:1.8;color:#ccc;margin-bottom:16px;}
+        .modal-desc{font-size:13px;line-height:1.8;color:#ccc;margin-bottom:16px;white-space:pre-wrap;}
         .modal-close{width:100%;background:rgba(255,255,255,.1);color:#fff;border:none;padding:10px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;}
         .modal-close:hover{background:rgba(255,255,255,.2);}
 
@@ -531,11 +528,9 @@ function tutupGambar(){
 }
 
 const daftarTestimoni=[
-    {gambar:"https://files.catbox.moe/vnnh89.jpg",nama:"xavelixy — rese ",bintang:"⭐⭐⭐",keteranganGambar:"Bukti Pembelian — xavelixy",teks:"PRODUK : sc bot & cpanel, HARGA : 35.000, PAYMENT : Qriss, TGLPSN : 29-9-2023"},
-    {gambar:"https://i.ibb.co/21wXZxNf/img-1790056695378.jpg",nama:"Matzz — Gacor",bintang:"⭐⭐",keteranganGambar:"Bukti Pembelian — Matzz",teks:"PRODUK : Apk bug member resseler perma, HARGA : 28.000 (nego) PAYMENT : Qriss, TGLPSN : 15-8-2026"},
-    {gambar:"https://files.catbox.moe/2n23et.jpg",nama:"Fikzz — Gods",bintang:"⭐⭐",keteranganGambar:"Bukti Pembelian — Fikzz",teks:"PRODUK : Base apk, HARGA : 20.000, PAYMENT : Qriss, TGLPSN : 11-9-2023"},
-    {gambar:"https://i.ibb.co/5XK3yMHF/img-1790059515610.jpg",nama:"Jhong — Puas",bintang:"",keteranganGambar:"Bukti Pembelian — Jhong",teks:"PRODUK : naik pangkat resseler, HARGA : 5.000, PAYMENT : Qriss, TGLPSN : 17-8-2026"},
-    {gambar:"https://i.ibb.co/gb7R139s/img-1790059799532.jpg",nama:"Yanxx — Mantap",bintang:"",keteranganGambar:"Bukti Pembelian — Yanxx",teks:"PRODUK : Apk bug member harian, HARGA : 5.000, PAYMENT : Qriss, TGLPSN : 16-8-2026"}
+    {gambar:"https://i.ibb.co/21wXZxNf/img-1790056695378.jpg",nama:"Matzz — Gacor",bintang:"⭐⭐⭐",keteranganGambar:"Bukti Pembelian — Matzz",teks:"PRODUK : Apk bug member resseler perma, HARGA : 28.000 (nego) PAYMENT : Qriss, TGLPSN : 15-8-2026"},
+    {gambar:"https://i.ibb.co/5XK3yMHF/img-1790059515610.jpg",nama:"Jhong — Puas",bintang:"⭐",keteranganGambar:"Bukti Pembelian — Jhong",teks:"PRODUK : naik pangkat resseler, HARGA : 5.000, PAYMENT : Qriss, TGLPSN : 17-8-2026"},
+    {gambar:"https://i.ibb.co/gb7R139s/img-1790059799532.jpg",nama:"Yanxx — Mantap",bintang:"⭐",keteranganGambar:"Bukti Pembelian — Yanxx",teks:"PRODUK : Apk bug member harian, HARGA : 5.000, PAYMENT : Qriss, TGLPSN : 16-8-2026"}
 ];
 
 function bukaTestimoni(){
@@ -560,27 +555,7 @@ const produk=[
     {nama:"Script Bot WhatsApp",harga:"Rp 25.000",gambar:"https://i.ibb.co/RGB7pqk2/img-1790205828231.jpg",keteranganGambar:"Tampilan Script Bot WA",deskripsi:"✅ No Bad Sessions\n✅ Fitur 1.250+\n✅ Type caseXplugins (ESM)\n✅ No Enc 100%\n✅ Stabil\n✅ Support Button\n✅ Baileys: npm:wileys\n✅ Full pengajaran memasang script"},
     {nama:"Panel Pterodactyl",harga:"Rp 10.000",gambar:"https://i.ibb.co/rGJGyxQq/img-1790205909619.jpg",keteranganGambar:"Tampilan Panel Pterodactyl",deskripsi:"✅ Di tutor Cara Pakai\n✅ Bisa pasang bot dll\n✅ Stabil\n✅ Tanpa Error\n✅ No delay"},
     {nama:"Nokos All Negara",harga:"Rp 10.000",gambar:"https://i.ibb.co/FL9mQzxv/img-1790054909150.jpg",keteranganGambar:"Nokos All Negara",deskripsi:"✅ Banyak Negara\n✅ Siap Pakai Langsung\n✅ Support semua WA"},
-    {nama:"APK Bug",harga:"Muali Rp 5.000",gambar:"https://files.catbox.moe/jyggt7.jpg",keteranganGambar:"Tampilan apk Bug",deskripsi:"✅ Support semua Hp\n✅ Fitur Lengkap\n✅ di tutor cara pakai\n✅ cocok bug ripper(scam)
-    
-Daftar Harga & Layanan
-Paket Langganan & Akses :\n2 bulan 5.000
-- gk bisa jual apk
-- gak mendapatkan update\nVip/fulup perma 15.000
-- mendapatkak full update
-- bisa buka jasa bug
-- gk bisa jual apk\nReseller 30.000
-- bisa jual apk
-- bisa buka jasa bug
-- mendapatkan full update
-- bisa ubah pw\nOwner 50.000
-- bisa jual apk
-- bisa buka jasa bug
-- mendapatkan full update
-- jadi admin groub
-- mendapatkan sc bot wa
-- semua fitur kebuka
-
-®"},
+    {nama:"APK Bug",harga:"Mulai Rp 5.000",gambar:"https://files.catbox.moe/jyggt7.jpg,keteranganGambar:"Tampilan apk Bug",deskripsi:"Support semua hp\nCocok bug ripper (scam)\n\n⏤͟͟͞͞𝙉𝙚𝙬 𝙐𝙥𝙙𝙖𝙩𝙚 𝘼𝙥𝙥𝙨 𝘽𝙪𝙜 X-EXECUTOR\n\nDaftar Harga & Layanan\nPaket Langganan & Akses\n\n2 bulan 5.000\n- gk bisa jual apk\n- gak mendapatkan update\n\nVip/fulup perma 15.000\n- mendapatkan full update\n- bisa buka jasa bug\n- gk bisa jual apk\n\nReseller 30.000\n- bisa jual apk\n- bisa buka jasa bug\n- mendapatkan full update\n- bisa ubah pw\n\nOwner 50.000\n- bisa jual apk\n- bisa buka jasa bug\n- mendapatkan full update\n- jadi admin groub\n- mendapatkan sc bot wa\n- semua fitur kebuka\n\n©"},
     {nama:"All Suntik Sosmed",harga:"Mulai Rp 2.500",gambar:"https://files.catbox.moe/a2p32n.jpg",keteranganGambar:"All Suntik Sosmed",deskripsi:`~ TIKTOK FOLLOWER
 50 Foll — Rp 5.000
 100 Foll — Rp 8.000
@@ -636,7 +611,7 @@ function bukaDetail(no){
     k.innerHTML=`<img src="${p.gambar}" class="modal-img" alt="${p.nama}" loading="lazy" onclick="lihatGambar('${p.gambar}','${p.keteranganGambar}')">
         <h3 class="modal-title">${p.nama}</h3>
         <p class="modal-price">${p.harga}</p>
-        <div class="modal-desc">${p.deskripsi.replace(/\n/g,'<br>')}</div>
+        <div class="modal-desc">${p.deskripsi}</div>
         <button class="buy-btn" style="margin-bottom:10px;" onclick="beliSekarang()">Beli Sekarang</button>
         <button class="modal-close" onclick="tutupDetail()">Tutup</button>`;
     document.getElementById('detailModal').classList.add('show');
