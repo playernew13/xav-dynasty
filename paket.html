@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOTPREM - Sewa Bot WhatsApp</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+  body{background:#0a0a0f;color:#f5f5f7;min-height:100vh}
+  nav{background:#14091a;padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2d1b36;position:sticky;top:0;z-index:10}
+  nav h2{color:#a855f7}
+  .tabs{display:flex;gap:30px}
+  .tabs button{background:none;border:none;color:#d8b4fe;font-size:16px;font-weight:500;cursor:pointer;padding:8px 0;border-bottom:2px solid transparent;transition:.3s}
+  .tabs button.active{color:#a855f7;border-bottom:2px solid #a855f7}
+  .tabs button:hover{color:#a855f7}
+  .page{display:none;animation:fade .4s}
+  .page.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .hero{text-align:center;padding:80px 20px;background:radial-gradient(1200px 600px at 50% -200px,#a855f71a,transparent)}
+  .hero h1{font-size:48px;background:linear-gradient(135deg,#a855f7,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:15px}
+  .hero p{color:#94a3b8;font-size:18px}
+  .container{max-width:1100px;margin:60px auto;padding:0 20px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}
+  .card{background:#1a1122;border:1px solid #2d1b36;border-radius:16px;padding:30px;transition:transform .3s,border .3s}
+  .card:hover{transform:translateY(-6px);border-color:#a855f7;box-shadow:0 10px 30px #a855f720}
+  .card h3{color:#c084fc;margin-bottom:12px;font-size:22px}
+  .price{font-size:34px;font-weight:700;color:#e9d5ff;margin:15px 0}
+  .fitur{list-style:none;margin:20px 0;color:#cbd5e1}
+  .fitur li{margin:10px 0;display:flex;gap:10px}
+  .fitur li::before{content:"✓";color:#a855f7;font-weight:bold}
+  .btn{display:block;text-align:center;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;padding:14px;border-radius:10px;text-decoration:none;font-weight:600;transition:.3s}
+  .btn:hover{filter:brightness(1.2);box-shadow:0 0 20px #a855f740}
+  .card.prem{background:#1a1122;border:2px solid #a855f7;box-shadow:0 0 40px #a855f730}
+  .card.prem h3{background:linear-gradient(135deg,#a855f7,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .price.big{font-size:50px}
+  .note{text-align:center;color:#94a3b8;font-size:14px;margin-top:15px}
+  footer{text-align:center;padding:30px;color:#64748b;border-top:1px solid #2d1b36;margin-top:60px}
+</style>
+</head>
+<body>
+
+<nav>
+  <h2>BOTPREM</h2>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showPage('paket')">Paket Sewa</button>
+    <button class="tab-btn" onclick="showPage('adduser')">Add User Premium</button>
+  </div>
+</nav>
+
+<!-- HALAMAN PAKET -->
+<div id="paket" class="page active">
+  <section class="hero">
+    <h1>Sewa Bot WhatsApp Premium</h1>
+    <p>Bot aktif 24/7, anti ban, support cepat</p>
+  </section>
+  <div class="container">
+    <div class="grid">
+      <div class="card">
+        <h3>PAKET HEMAT</h3>
+        <div class="price">Rp15k<span style="font-size:16px;color:#94a3b8">/bulan</span></div>
+        <ul class="fitur">
+          <li>Menu dasar + sticker</li>
+          <li>Auto reply 24/7</li>
+          <li>Uptime 99%</li>
+        </ul>
+        <a href="https://wa.me/62xxxxxxxx?text=Mau+paket+HEMAT" class="btn">Sewa Sekarang</a>
+      </div>
+
+      <div class="card">
+        <h3>PAKET PRO</h3>
+        <div class="price">Rp35k<span style="font-size:16px;color:#94a3b8">/bulan</span></div>
+        <ul class="fitur">
+          <li>Semua fitur HEMAT</li>
+          <li>AI + menu custom</li>
+          <li>Anti ban + backup</li>
+        </ul>
+        <a href="https://wa.me/62xxxxxxxx?text=Mau+paket+PRO" class="btn">Sewa Sekarang</a>
+      </div>
+
+      <div class="card">
+        <h3>PAKET VIP</h3>
+        <div class="price">Rp70k<span style="font-size:16px;color:#94a3b8">/bulan</span></div>
+        <ul class="fitur">
+          <li>Semua fitur PRO</li>
+          <li>Custom script bebas</li>
+          <li>Support 24/7 prioritas</li>
+        </ul>
+        <a href="https://wa.me/62xxxxxxxx?text=Mau+paket+VIP" class="btn">Sewa Sekarang</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HALAMAN ADD USER -->
+<div id="adduser" class="page">
+  <div class="container" style="max-width:600px;margin:100px auto">
+    <div class="card prem">
+      <h3 style="text-align:center;font-size:32px;margin-bottom:10px">ADD USER PREMIUM</h3>
+      <div class="price big">Rp5k<span style="font-size:20px;color:#94a3b8">/user</span></div>
+      <ul class="fitur">
+        <li>Tambah 1 user ke bot premium</li>
+        <li>Akses semua fitur tanpa limit</li>
+        <li>Berlaku 30 hari sejak aktivasi</li>
+        <li>Bisa beli multiple user sekaligus</li>
+      </ul>
+      <a href="https://wa.me/62xxxxxxxx?text=Mau+add+user+PREMIUM" class="btn">Tambah User Sekarang</a>
+      <p class="note">*Kirim nomor target ke WA admin setelah bayar</p>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 BOTPREM - All Rights Reserved</footer>
+
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
